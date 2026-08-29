@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import ServiceQuickLinks from '../../components/ServiceQuickLinks';
 
 interface CabOffer {
@@ -1057,7 +1057,7 @@ export default function CabsPage() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {offers.map((o) => {
-              const img = o.image ? `/${o.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg';
+              const img = o.image ? resolveAssetUrl(o.image) : '/images/default-dest.jpg';
               return (
                 <Link
                   key={o.id}
@@ -1154,7 +1154,7 @@ export default function CabsPage() {
                   }}
                 >
                   <img
-                    src={city.image ? `/${city.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg'}
+                    src={city.image ? resolveAssetUrl(city.image) : '/images/default-dest.jpg'}
                     alt={`${city.name} cab rental`}
                     className="w-full h-full object-cover"
                   />
@@ -1285,7 +1285,7 @@ export default function CabsPage() {
               >
                 <div className="w-full sm:w-[145px] aspect-square sm:h-[145px] overflow-hidden rounded-[26px] border border-slate-100/50 shadow-sm hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
                   <img
-                    src={city.image ? `/${city.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg'}
+                    src={city.image ? resolveAssetUrl(city.image) : '/images/default-dest.jpg'}
                     alt={city.name}
                     className="w-full h-full object-cover"
                   />

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import { hotelData, Mood, Destination, FAQ } from './hotel-data';
 import ServiceQuickLinks from '../../components/ServiceQuickLinks';
 
@@ -1204,7 +1204,7 @@ function ExclusiveOffersSection({ offers }: ExclusiveOffersSectionProps) {
           className="w-full"
         >
           {offers.map((o) => {
-            const img = o.image ? `/${o.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg';
+            const img = o.image ? resolveAssetUrl(o.image) : '/images/default-dest.jpg';
             const validity = o.valid_until
               ? `Valid Till : ${new Date(o.valid_until).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}`
               : '';
@@ -1339,7 +1339,7 @@ function HotelsOfChoiceCarousel({ choiceHotelsList }: HotelsOfChoiceCarouselProp
           className="w-full"
         >
           {choiceHotelsList.map((h) => {
-            const img = h.featured_image ? `/${h.featured_image.replace(/^\/?/, '')}` : '/images/default-hotel.jpg';
+            const img = h.featured_image ? resolveAssetUrl(h.featured_image) : '/images/default-hotel.jpg';
             return (
               <SwiperSlide key={h.id}>
                 <div
@@ -1866,7 +1866,7 @@ export default function HotelPage() {
           data.data.map((c: { city: string; hotel_count: string; sample_image?: string }) => ({
             name: c.city,
             count: `${c.hotel_count} ${Number(c.hotel_count) === 1 ? 'Hotel' : 'Hotels'}`,
-            img: c.sample_image ? `/${c.sample_image}` : '/images/default-dest.jpg',
+            img: c.sample_image ? resolveAssetUrl(c.sample_image) : '/images/default-dest.jpg',
           }))
         );
       }

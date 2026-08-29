@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 import { slugifyDestination, toTitleCase, slugifyActivityName } from '../utils';
 
 interface Activity {
@@ -323,7 +323,7 @@ export default function CityActivitiesPage() {
             )}
 
             {!isLoading && filteredSorted.map((act) => {
-              const img = act.featured_image ? `/${act.featured_image}` : '/images/default-activity.jpg';
+              const img = act.featured_image ? resolveAssetUrl(act.featured_image) : '/images/default-activity.jpg';
               const price = Number(act.offer_price) > 0 ? Number(act.offer_price) : Number(act.price) || 0;
               // Only a genuine, admin-set rating is shown - no fallback/fabricated
               // number, and no invented "review count" since there's no real

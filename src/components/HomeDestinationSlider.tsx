@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import Link from 'next/link';
 import { REGION_SLUG_MAP } from '../lib/destinationRegions';
+import { resolveAssetUrl } from '../config';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -58,7 +59,7 @@ export default function HomeDestinationSlider({ destinations }: HomeDestinationS
             className="desnetionSwiperHomePage"
           >
             {destinations.map((dest) => {
-              const img = dest.image ? `/${dest.image.replace('../', '')}` : '/images/destination-1.jpg';
+              const img = dest.image ? resolveAssetUrl(dest.image.replace('../', '')) : '/images/destination-1.jpg';
               const priceDisplay = dest.min_price
                 ? `Start at INR ${parseFloat(dest.min_price).toLocaleString('en-IN')}`
                 : 'Custom Packages';

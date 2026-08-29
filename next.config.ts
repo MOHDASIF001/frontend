@@ -6,6 +6,17 @@ const nextConfig: NextConfig = {
   // timeout there even though they build in seconds locally. Give it more room.
   staticPageGenerationTimeout: 300,
 
+  // Admin-uploaded images (packages, hotels, cabs, destinations, activities)
+  // are served from the PHP backend's own domain, which is different from
+  // this frontend's domain in production. next/image refuses to optimize an
+  // external image unless its host is explicitly whitelisted here.
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'backend.twinbholidays.com' },
+      { protocol: 'http', hostname: 'localhost' },
+    ],
+  },
+
   // In production the frontend and the PHP API/uploads live on the same
   // domain, so admin-uploaded image paths like "/uploads/..." resolve
   // automatically. Locally they're on different origins (this dev server vs

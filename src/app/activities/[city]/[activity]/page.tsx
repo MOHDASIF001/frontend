@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useModals } from '../../../../context/ModalContext';
-import { API_BASE_URL } from '../../../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../../../config';
 import { toTitleCase, slugifyActivityName } from '../../utils';
 
 interface Activity {
@@ -102,12 +102,12 @@ export default function ActivityDetailPage() {
     [activities, activitySlug]
   );
 
-  const img = activity?.featured_image ? `/${activity.featured_image}` : '/images/default-activity.jpg';
+  const img = activity?.featured_image ? resolveAssetUrl(activity.featured_image) : '/images/default-activity.jpg';
   const adminGallery = (activity?.gallery_images || '')
     .split(',')
     .map((g) => g.trim())
     .filter(Boolean)
-    .map((g) => `/${g}`);
+    .map((g) => resolveAssetUrl(g));
   const galleryImages = adminGallery.length > 0 ? adminGallery : [img, img, img, img];
   const inclusions = linesToList(activity?.inclusions);
   const displayInclusions = inclusions.length > 0 ? inclusions : defaultInclusions;

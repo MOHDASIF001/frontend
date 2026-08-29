@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { useModals } from '../context/ModalContext';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, resolveAssetUrl } from '../config';
 import { parseRoomsParam, totalExtraChargePerNight } from '../lib/occupancyPricing';
 
 // Import Swiper styles
@@ -266,7 +266,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                   className="hotelHeroSwiper h-full rounded-xl"
                 >
                   {galleryList.map((img, index) => {
-                    const imgSrc = img.startsWith('http') ? img : `/${img.replace(/^\//, '')}`;
+                    const imgSrc = resolveAssetUrl(img);
                     return (
                       <SwiperSlide key={index}>
                         <div 
@@ -452,7 +452,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
               className="h-full w-full"
             >
               {galleryList.map((img, index) => {
-                const imgSrc = img.startsWith('http') ? img : `/${img.replace(/^\//, '')}`;
+                const imgSrc = resolveAssetUrl(img);
                 return (
                   <SwiperSlide key={index}>
                     <div 
@@ -631,7 +631,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                         <h4 className="font-extrabold text-slate-800 mb-2" style={{ fontSize: '18px' }}>{room.room_name}</h4>
                         <div className="rounded-lg overflow-hidden my-3" style={{ height: '180px' }}>
                           <img 
-                            src={room.room_image ? `/${room.room_image.replace('../', '')}` : '/images/default-hotel.jpg'} 
+                            src={room.room_image ? resolveAssetUrl(room.room_image.replace('../', '')) : '/images/default-hotel.jpg'}
                             alt={room.room_name} 
                             className="w-full h-full object-cover"
                           />
@@ -646,7 +646,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                         {/* Image Thumbnail */}
                         <div className="w-[100px] h-[75px] rounded-lg overflow-hidden flex-shrink-0">
                           <img 
-                            src={room.room_image ? `/${room.room_image.replace('../', '')}` : '/images/default-hotel.jpg'} 
+                            src={room.room_image ? resolveAssetUrl(room.room_image.replace('../', '')) : '/images/default-hotel.jpg'}
                             alt={room.room_name} 
                             className="w-full h-full object-cover"
                           />
@@ -922,9 +922,9 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                 const idNum = typeof h.id === 'number' ? h.id : parseInt(String(h.id || '0'), 10);
                 const startImgIndex = (idNum || 0) % realHotelImages.length;
                 const hotelImage = h.gallery && h.gallery.length > 0
-                  ? `/${h.gallery[0].replace(/^\.\.\//, '')}`
+                  ? resolveAssetUrl(h.gallery[0].replace(/^\.\.\//, ''))
                   : h.featured_image
-                    ? `/${h.featured_image.replace('../', '')}`
+                    ? resolveAssetUrl(h.featured_image.replace('../', ''))
                     : realHotelImages[startImgIndex];
 
                 return (
@@ -1029,7 +1029,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
             style={{ maxHeight: '90px' }}
           >
             {galleryList.map((img, i) => {
-              const thumbSrc = img.startsWith('http') ? img : `/${img.replace(/^\//, '')}`;
+              const thumbSrc = resolveAssetUrl(img);
               return (
                 <div 
                   key={i} 

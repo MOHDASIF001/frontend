@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import ServiceQuickLinks from '../../components/ServiceQuickLinks';
 import { slugifyDestination, slugifyActivityTitle } from './utils';
 
@@ -202,7 +202,7 @@ export default function ActivitiesPage() {
     .slice(0, 5);
 
   const renderActivityCard = (act: Activity) => {
-    const img = act.featured_image ? `/${act.featured_image}` : '/images/default-activity.jpg';
+    const img = act.featured_image ? resolveAssetUrl(act.featured_image) : '/images/default-activity.jpg';
     const price = act.price;
     const offer = act.offer_price > 0 ? act.offer_price : price;
 
@@ -310,7 +310,7 @@ export default function ActivitiesPage() {
                     ))}
 
                     {matchedActivityNames.slice(0, 6).map((act) => {
-                      const img = act.featured_image ? `/${act.featured_image}` : '/images/default-activity.jpg';
+                      const img = act.featured_image ? resolveAssetUrl(act.featured_image) : '/images/default-activity.jpg';
                       return (
                         <div
                           key={act.id}
@@ -394,7 +394,7 @@ export default function ActivitiesPage() {
             {domesticDestinations.map((dest) => {
               const price = startingPriceFor(dest.name);
               const count = Number(dest.activity_count) || 0;
-              const img = dest.image ? `/${dest.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg';
+              const img = dest.image ? resolveAssetUrl(dest.image) : '/images/default-dest.jpg';
               return (
                 <button
                   key={dest.id}
@@ -490,7 +490,7 @@ export default function ActivitiesPage() {
             {internationalDestinations.map((dest) => {
               const price = startingPriceFor(dest.name);
               const count = Number(dest.activity_count) || 0;
-              const img = dest.image ? `/${dest.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg';
+              const img = dest.image ? resolveAssetUrl(dest.image) : '/images/default-dest.jpg';
               return (
                 <button
                   key={dest.id}

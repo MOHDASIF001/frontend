@@ -4,6 +4,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import Link from 'next/link';
+import { resolveAssetUrl } from '../config';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -64,7 +65,7 @@ export default function HomePackageSlider({ packages, title, description, hideHe
             className="packageSwiperHomePage"
           >
             {packages.map((pkg) => {
-              const img = pkg.featured_image ? `/${pkg.featured_image.replace('../', '')}` : '/images/default-package.jpg';
+              const img = pkg.featured_image ? resolveAssetUrl(pkg.featured_image.replace('../', '')) : '/images/default-package.jpg';
               const rating = (4.0 + (parseInt(pkg.id) % 10) / 10).toFixed(1);
               const reviews = 10 + (parseInt(pkg.id) * 3) % 190;
               const offerPrice = pkg.discounted_price ? parseFloat(pkg.discounted_price) : parseFloat(pkg.price);

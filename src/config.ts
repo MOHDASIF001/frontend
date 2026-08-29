@@ -30,3 +30,18 @@ function resolveApiBaseUrl(): string {
 }
 
 export const API_BASE_URL = resolveApiBaseUrl();
+
+// Admin-uploaded images (packages, hotels, destinations, activities, cabs)
+// are stored on the PHP backend and referenced in the DB as root-relative
+// paths like "uploads/xyz.jpg". Before the frontend moved to its own domain
+// (Netlify) separate from the backend (Hostinger), a plain "/uploads/xyz.jpg"
+// happened to work because both were served from the same origin. Now it
+// must be resolved against the backend's own origin instead.
+export const ASSET_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
+
+export function resolveAssetUrl(path: string | null | undefined, fallback = ''): string {
+  if (!path) return fallback;
+  if (/^https?:\/\//i.test(path) || path.startsWith('data:')) return path;
+  const clean = path.replace(/^\.?\.?\//, '');
+  return `${ASSET_BASE_URL}/${clean}`;
+}

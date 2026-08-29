@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import { parseRoomsParam, totalExtraChargePerNight } from '../../lib/occupancyPricing';
 
 interface Room {
@@ -309,7 +309,7 @@ function CheckoutContent() {
             <div className="bg-white border border-slate-150 rounded-2xl py-4 sm:py-4 shadow-none flex flex-col sm:flex-row gap-4 mx-[10px] sm:mx-0" style={{ marginTop: '60px', marginLeft: isMobile ? '10px' : '0px', marginRight: isMobile ? '10px' : '0px', paddingLeft: '10px', paddingRight: '10px' }}>
               <div className="w-full sm:w-[160px] rounded-xl overflow-hidden flex-shrink-0" style={{ height: isMobile ? '156px' : '120px' }}>
                 <img 
-                  src={hotel.featured_image ? `/${hotel.featured_image.replace('../', '')}` : '/images/default-hotel.jpg'} 
+                  src={hotel.featured_image ? resolveAssetUrl(hotel.featured_image.replace('../', '')) : '/images/default-hotel.jpg'}
                   alt={hotel.name} 
                   className="w-full h-full object-cover"
                 />

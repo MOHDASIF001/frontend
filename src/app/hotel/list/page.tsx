@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo, Suspense, useRef } fr
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 
 // Define TS interfaces
 interface Hotel {
@@ -116,9 +116,9 @@ function ListingHotelCard({ hotel, detailsQuery }: ListingHotelCardProps) {
   // image when no gallery has been added yet). Only falls back to a generic
   // stock photo if the hotel genuinely has no image at all in the DB.
   const rotatedImages = hotel.gallery && hotel.gallery.length > 0
-    ? hotel.gallery.map((g) => (g.startsWith('http') ? g : `/${g.replace(/^\.\.\//, '')}`))
+    ? hotel.gallery.map((g) => resolveAssetUrl(g.replace(/^\.\.\//, '')))
     : hotel.featured_image
-      ? [`/${hotel.featured_image.replace(/^\.\.\//, '')}`]
+      ? [resolveAssetUrl(hotel.featured_image.replace(/^\.\.\//, ''))]
       : ['/images/hotels/hotel_exterior_1.png'];
 
   const [activeImgIdx, setActiveImgIdx] = useState(0);
@@ -1391,7 +1391,7 @@ function HotelListContent() {
                 style={{ minHeight: '90px', textDecoration: 'none' }}
               >
                 <img
-                  src={promoBanner.image.startsWith('http') ? promoBanner.image : `/${promoBanner.image.replace(/^\.\.\//, '')}`}
+                  src={resolveAssetUrl(promoBanner.image.replace(/^\.\.\//, ''))}
                   alt={promoBanner.title || 'Special offer'}
                   className="absolute inset-0 w-full h-full object-cover"
                 />

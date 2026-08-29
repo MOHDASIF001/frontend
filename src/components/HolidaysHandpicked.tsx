@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { resolveAssetUrl } from '../config';
 
 interface Package {
   id: string;
@@ -143,7 +144,7 @@ export default function HolidaysHandpicked({ packages, activeCategory = '' }: { 
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {list.map((pkg) => {
-            const img = pkg.featured_image ? `/${pkg.featured_image.replace('../', '')}` : '/images/default-package.jpg';
+            const img = pkg.featured_image ? resolveAssetUrl(pkg.featured_image.replace('../', '')) : '/images/default-package.jpg';
             const price = pkg.discounted_price ? parseFloat(pkg.discounted_price) : parseFloat(pkg.price);
             return (
               <Link

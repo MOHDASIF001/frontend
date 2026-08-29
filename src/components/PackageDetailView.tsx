@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useModals } from '../context/ModalContext';
+import { resolveAssetUrl } from '../config';
 
 interface ItineraryDay {
   title?: string;
@@ -63,8 +64,8 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
   const finalPrice = hasDiscount ? discountedPrice : price;
 
   const images = pkg.gallery && pkg.gallery.length > 0
-    ? pkg.gallery.map((g) => (g.startsWith('http') ? g : `/${g.replace(/^\//, '')}`))
-    : [pkg.featured_image ? `/${pkg.featured_image.replace(/^\.\.\//, '')}` : '/images/default-package.jpg'];
+    ? pkg.gallery.map((g) => resolveAssetUrl(g))
+    : [pkg.featured_image ? resolveAssetUrl(pkg.featured_image.replace(/^\.\.\//, '')) : '/images/default-package.jpg'];
 
   const inclusions = pkg.inclusions ? pkg.inclusions.split('\n').map((s) => s.trim()).filter(Boolean) : [];
   const exclusions = pkg.exclusions ? pkg.exclusions.split('\n').map((s) => s.trim()).filter(Boolean) : [];

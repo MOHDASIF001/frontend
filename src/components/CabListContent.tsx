@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL, resolveAssetUrl } from '../config';
 
 interface Cab {
   id: number;
@@ -30,7 +30,7 @@ function getFuelType(cab: Cab) {
 }
 
 function getCabImage(cab: Cab) {
-  return cab.featured_image ? `/${cab.featured_image.replace(/^\/?/, '')}` : '/images/cab.jpg';
+  return cab.featured_image ? resolveAssetUrl(cab.featured_image) : '/images/cab.jpg';
 }
 
 function getLuggageBags(cab: Cab) {

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useModals } from '../context/ModalContext';
+import { resolveAssetUrl } from '../config';
 
 export interface PackageCardData {
   id: number;
@@ -26,7 +27,7 @@ export default function PackageCard({ pkg, layout = 'row' }: { pkg: PackageCardD
   const hasDiscount = discountedPrice > 0 && discountedPrice < price;
   const finalPrice = hasDiscount ? discountedPrice : price;
   const savings = hasDiscount ? price - discountedPrice : 0;
-  const img = pkg.featured_image ? `/${pkg.featured_image.replace(/^\.?\.?\//, '')}` : '/images/default-package.jpg';
+  const img = pkg.featured_image ? resolveAssetUrl(pkg.featured_image) : '/images/default-package.jpg';
 
   const handleEnquire = (e: React.MouseEvent) => {
     e.preventDefault();

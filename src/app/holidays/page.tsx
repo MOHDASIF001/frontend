@@ -3,7 +3,7 @@ import Link from 'next/link';
 import HolidaysSearchBar from '../../components/HolidaysSearchBar';
 import HolidaysPromoSlider from '../../components/HolidaysPromoSlider';
 import HolidaysHandpicked from '../../components/HolidaysHandpicked';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import { Category, slugifyCategory, getCategoryImage } from '../../lib/categories';
 import { getRegionSlug } from '../../lib/destinationRegions';
 
@@ -77,7 +77,7 @@ function dedupeByRegion(destinations: Destination[]) {
     seen.add(key);
     result.push({
       name: regionSlug ? regionSlug.charAt(0).toUpperCase() + regionSlug.slice(1) : dest.name,
-      image: dest.image ? `/${dest.image.replace(/^\/?/, '')}` : '/images/destination-1.jpg',
+      image: dest.image ? resolveAssetUrl(dest.image) : '/images/destination-1.jpg',
       href: regionSlug ? `/holidays/${regionSlug}` : '/destinations',
     });
   }

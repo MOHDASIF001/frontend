@@ -3,6 +3,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { resolveAssetUrl } from '../config';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -38,7 +39,7 @@ export default function TourGallerySlider({ gallery, title }: TourGallerySliderP
         className="heroSwiperTourDetailsPage"
       >
         {gallery.map((img, index) => {
-          const imgSrc = img.startsWith('http') ? img : `/${img.replace(/^\//, '')}`;
+          const imgSrc = resolveAssetUrl(img);
           return (
             <SwiperSlide key={index}>
               <div className="tour-dtls-hero-card-div">

@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { API_BASE_URL } from '../../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 import CopyCodeButton from '../../../components/CopyCodeButton';
 
 export const revalidate = 60;
@@ -87,7 +87,7 @@ export default async function OfferDetailPage({ params }: PageProps) {
     );
   }
 
-  const img = offer.image ? `/${offer.image.replace(/^\/?/, '')}` : '/images/default-dest.jpg';
+  const img = offer.image ? resolveAssetUrl(offer.image) : '/images/default-dest.jpg';
   const terms = (offer.terms_conditions || '')
     .split('\n')
     .map((line) => line.trim())
