@@ -1,0 +1,279 @@
+@import "tailwindcss";
+@import "./style.css";
+
+:root {
+  --color-primary: #ff8126;
+  --color-primary-dark: #e6701b;
+  --color-accent: #ff8126;
+  --color-accent-hover: #e6701b;
+  --color-success: #1fae5c;
+  --color-bg-light: #f5f8fc;
+  --color-bg-neutral: #efefef;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5f6b7a;
+  --color-border: #e2e6ec;
+  --color-white: #ffffff;
+}
+
+/* Reset background or font overrides that Next.js defaults set */
+body {
+  font-family: 'Outfit', sans-serif !important;
+  background: #ffffff !important;
+  color: #171717 !important;
+}
+
+/* Belt-and-suspenders: nothing on this site should ever be horizontally
+   scrollable — any element that briefly renders wider than the viewport
+   (an unconstrained image before its CSS applies, an absolutely-positioned
+   control, etc.) should get clipped instead of shifting the whole page. */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.font-script {
+  font-family: 'Caveat', cursive;
+}
+
+/* Custom Blue Scrollbar matching EaseMyTrip */
+.custom-blue-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #2196f3 #e1f0ff;
+}
+
+.custom-blue-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-blue-scrollbar::-webkit-scrollbar-track {
+  background: #e1f0ff;
+  border-radius: 9999px;
+}
+
+.custom-blue-scrollbar::-webkit-scrollbar-thumb {
+  background: #2196f3;
+  border-radius: 9999px;
+}
+
+.custom-blue-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #1976d2;
+}
+
+/* Fix Swiper pagination dots overlapping cards */
+.packageSwiperHomePage,
+.desnetionSwiperHomePage,
+.reviewSwiperHomePage {
+  padding-bottom: 40px !important;
+}
+
+.packageSwiperHomePage .swiper-pagination,
+.desnetionSwiperHomePage .swiper-pagination,
+.reviewSwiperHomePage .swiper-pagination {
+  bottom: 0px !important;
+}
+
+/* Offers Swiper: Dots exactly 10px below cards */
+.offersSwiper {
+  padding-bottom: 20px !important;
+}
+
+.offersSwiper .swiper-pagination {
+  bottom: 0px !important;
+}
+
+/* Customize Swiper pagination active color to match Twin Brothers theme */
+.swiper-pagination-bullet-active {
+  background: #ff8126 !important;
+}
+
+/* Reduce hotel details hero gallery height by 10% */
+@media (min-width: 992px) {
+  .hotel-hero-main-col,
+  .hotel-hero-thumbs-col,
+  .hotel-hero-info-col {
+    height: 288px !important; /* Reduced 10% from 320px */
+  }
+}
+@media (max-width: 991px) {
+  .hotel-hero-main-col {
+    height: 202px !important; /* Reduced 10% from 225px */
+  }
+}
+
+/* Custom Swiper Navigation Arrows for hotelHeroSwiper */
+.hotel-prev-arrow,
+.hotel-next-arrow {
+  position: absolute;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  color: #ff8126 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.hotel-prev-arrow:hover,
+.hotel-next-arrow:hover {
+  background: #fff !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+.hotel-prev-arrow {
+  left: 10px !important;
+}
+
+.hotel-next-arrow {
+  right: 10px !important;
+}
+
+.hotel-prev-arrow i,
+.hotel-next-arrow i {
+  font-size: 14px !important;
+  font-weight: bold !important;
+  color: #ff8126 !important;
+}
+
+/* Force Swiper Navigation Arrows on Mobile to display our custom ones */
+@media (max-width: 991px) {
+  .hotel-prev-arrow,
+  .hotel-next-arrow {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    width: 35px !important;
+    height: 35px !important;
+    z-index: 100 !important;
+  }
+  
+  .hotel-prev-arrow i,
+  .hotel-next-arrow i {
+    font-size: 16px !important;
+  }
+}
+
+/* Reduce gap between hotel details hero section and tab navbar by 80% */
+.hotel-details-hero-section {
+  margin-bottom: 2px !important;
+}
+
+.hotel-details-tab-container {
+  margin-top: 2px !important;
+}
+
+/* =============================================
+   NAVBAR — LEFT SIDE LINKS (Desktop + Mobile)
+   ============================================= */
+
+/* Mobile: add border and padding to dropdown links */
+@media (max-width: 991px) {
+  .navbar-collapse .nav-link {
+    padding: 12px 20px !important;
+    width: 100% !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+  }
+}
+
+/* Set navbar link colors to black, hover to theme orange */
+.nav-link {
+  color: #000000 !important;
+  transition: color 0.3s ease, transform 0.2s ease !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ff8126 !important;
+  font-weight: bold !important;
+}
+
+/* Partners Swiper Carousel custom styling */
+.partnersSwiper {
+  padding-bottom: 35px !important;
+}
+
+.partnersSwiper .swiper-pagination {
+  bottom: 0px !important;
+}
+
+/* Booking support card custom padding override */
+.booking-support-card {
+  padding: 60px 48px !important;
+}
+
+@media (max-width: 768px) {
+  .booking-support-card {
+    padding: 40px 24px !important;
+  }
+}
+
+/* Neutralize Tailwind collapse utility conflict with Bootstrap navbar collapse */
+.navbar-collapse.collapse {
+  visibility: visible !important;
+}
+
+/* Ensure Navbar items stay in a single line on desktop and scale text sizes */
+@media (min-width: 992px) {
+  .navbar-nav {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+  
+  .navbar-nav .nav-link {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+  
+  .navbar-nav .nav-custom-package-btn {
+    font-size: 12px !important;
+    padding: 6px 14px !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar-nav .nav-link {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    font-size: 14px !important;
+  }
+  
+  .navbar-nav .nav-custom-package-btn {
+    font-size: 13px !important;
+    padding: 7px 18px !important;
+  }
+}
+
+/* Thin Scrollbar style for left sidebar */
+.thin-scrollbar {
+  scrollbar-width: thin !important; /* Firefox */
+  scrollbar-color: #cbd5e1 transparent !important; /* Firefox */
+}
+
+/* Chrome, Safari, Edge */
+.thin-scrollbar::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1 !important;
+  border-radius: 20px !important;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8 !important;
+}
