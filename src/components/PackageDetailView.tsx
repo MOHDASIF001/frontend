@@ -32,10 +32,10 @@ interface PackageData {
 }
 
 const navSections = [
-  { id: 'pkg-overview', label: 'Overview' },
-  { id: 'pkg-itinerary', label: 'Day wise Itinerary' },
-  { id: 'pkg-inclusion', label: 'Inclusion/Exclusions' },
-  { id: 'pkg-additional', label: 'Additional Info' },
+  { id: 'pkg-overview', label: 'Overview', shortLabel: 'Overview' },
+  { id: 'pkg-itinerary', label: 'Day wise Itinerary', shortLabel: 'Itinerary' },
+  { id: 'pkg-inclusion', label: 'Inclusion/Exclusions', shortLabel: 'Inclusions' },
+  { id: 'pkg-additional', label: 'Additional Info', shortLabel: 'Additional' },
 ];
 
 export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
@@ -89,7 +89,7 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">
-      <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: `${navbarHeight + 10}px`, paddingBottom: '60px' }}>
+      <div className="max-w-[1140px] mx-auto px-1.5 sm:px-6 lg:px-8" style={{ paddingTop: `${navbarHeight + 10}px`, paddingBottom: '60px' }}>
         {/* Breadcrumb */}
         <p className="text-sm font-semibold text-slate-500 mb-[6px]">
           <Link href="/" className="hover:underline" style={{ textDecoration: 'none', color: '#64748b' }}>Home</Link>
@@ -100,10 +100,10 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
         </p>
 
         {/* Title row */}
-        <div className="flex flex-wrap items-center gap-3 mb-[2px]">
-          <h1 className="font-black text-slate-900" style={{ fontSize: '26px' }}>{pkg.title}</h1>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-[2px]">
+          <h1 className="font-black text-slate-900 text-[19px] sm:text-[26px]">{pkg.title}</h1>
           {(pkg.duration_nights || pkg.duration_days) && (
-            <span className="font-bold text-slate-700" style={{ fontSize: '15px' }}>
+            <span className="font-bold text-slate-700 flex-shrink-0" style={{ fontSize: '13px' }}>
               {pkg.duration_nights}N / {pkg.duration_days}D
             </span>
           )}
@@ -115,11 +115,11 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
           </p>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-6">
           {/* Left column */}
           <div className="flex-1 min-w-0">
             {/* Gallery */}
-            <div className="relative rounded-2xl overflow-hidden mb-6" style={{ height: '360px' }}>
+            <div className="relative rounded-2xl overflow-hidden mb-3 sm:mb-6 h-[220px] sm:h-[300px] lg:h-[360px]">
               <img src={images[activeImage]} alt={pkg.title} className="w-full h-full object-cover" />
               {images.length > 1 && (
                 <>
@@ -127,7 +127,7 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
                     type="button"
                     onClick={() => setActiveImage((i) => (i - 1 + images.length) % images.length)}
                     className="absolute flex items-center justify-center rounded-full border-none cursor-pointer"
-                    style={{ left: '14px', top: '50%', transform: 'translateY(-50%)', width: '36px', height: '36px', background: 'rgba(255,255,255,0.9)', color: '#094074' }}
+                    style={{ left: '10px', top: '50%', transform: 'translateY(-50%)', width: '32px', height: '32px', background: 'rgba(255,255,255,0.9)', color: '#094074' }}
                   >
                     <i className="fa-solid fa-chevron-left"></i>
                   </button>
@@ -135,7 +135,7 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
                     type="button"
                     onClick={() => setActiveImage((i) => (i + 1) % images.length)}
                     className="absolute flex items-center justify-center rounded-full border-none cursor-pointer"
-                    style={{ right: '14px', top: '50%', transform: 'translateY(-50%)', width: '36px', height: '36px', background: 'rgba(255,255,255,0.9)', color: '#094074' }}
+                    style={{ right: '10px', top: '50%', transform: 'translateY(-50%)', width: '32px', height: '32px', background: 'rgba(255,255,255,0.9)', color: '#094074' }}
                   >
                     <i className="fa-solid fa-chevron-right"></i>
                   </button>
@@ -144,13 +144,12 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
             </div>
 
             {/* Sticky section nav */}
-            <div className="mb-6" style={{ position: 'sticky', top: `${navbarHeight}px`, zIndex: 30 }}>
+            <div className="mb-3 sm:mb-6 relative" style={{ position: 'sticky', top: `${navbarHeight}px`, zIndex: 30 }}>
               <div
-                className="flex flex-nowrap items-center gap-2 bg-white rounded-full overflow-x-auto"
+                className="flex flex-nowrap items-center gap-1.5 sm:gap-2 bg-white rounded-full overflow-x-auto"
                 style={{
                   border: '1px solid #eef1f5',
                   padding: '6px',
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
                 }}
@@ -160,30 +159,34 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
                     key={section.id}
                     type="button"
                     onClick={() => scrollToSection(section.id)}
-                    className="font-bold cursor-pointer border-none flex-shrink-0 whitespace-nowrap"
+                    className="font-bold cursor-pointer border-none flex-shrink-0 whitespace-nowrap text-[12px] sm:text-[13px] px-3.5 py-2.5 sm:px-5 sm:py-2.5"
                     style={{
-                      fontSize: '13px',
                       borderRadius: '999px',
-                      padding: '10px 20px',
                       background: activeSection === section.id ? 'linear-gradient(135deg, #094074, #1a5ba8)' : 'transparent',
                       color: activeSection === section.id ? '#fff' : '#64748b',
                     }}
                   >
-                    {section.label}
+                    <span className="sm:hidden">{section.shortLabel}</span>
+                    <span className="hidden sm:inline">{section.label}</span>
                   </button>
                 ))}
               </div>
+              {/* Fade hint that the tab bar scrolls horizontally on narrow screens */}
+              <div
+                className="sm:hidden pointer-events-none absolute right-[6px] top-[6px] bottom-[6px] w-8 rounded-r-full"
+                style={{ background: 'linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.95))' }}
+              />
             </div>
 
             {/* Content */}
-            <div className="bg-white border border-slate-150 rounded-xl p-5">
-              <h3 id="pkg-overview" className="font-black text-slate-900 mb-3" style={{ fontSize: '17px', scrollMarginTop: `${navbarHeight + 66}px` }}>Package Overview</h3>
+            <div className="bg-white border border-slate-150 rounded-xl p-2 sm:p-5">
+              <h3 id="pkg-overview" className="font-black text-slate-900 mb-1.5 sm:mb-3" style={{ fontSize: '17px', scrollMarginTop: `${navbarHeight + 66}px` }}>Package Overview</h3>
               <p className="text-slate-600" style={{ fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
                 {pkg.description || pkg.short_description || `Discover ${pkg.title} with Twin Brothers Holidays.`}
               </p>
               {pkg.what_to_expect && (
                 <>
-                  <h3 className="font-black text-slate-900 mt-6 mb-3" style={{ fontSize: '17px' }}>What to Expect</h3>
+                  <h3 className="font-black text-slate-900 mt-3 mb-1.5 sm:mt-6 sm:mb-3" style={{ fontSize: '17px' }}>What to Expect</h3>
                   <p className="text-slate-600" style={{ fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
                     {pkg.what_to_expect}
                   </p>
@@ -193,8 +196,8 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
               {/* Day Wise Itinerary */}
               <h3
                 id="pkg-itinerary"
-                className="font-black text-slate-900 mt-6 mb-4"
-                style={{ fontSize: '17px', borderLeft: '4px solid #094074', paddingLeft: '12px', scrollMarginTop: `${navbarHeight + 66}px` }}
+                className="font-black text-slate-900 mt-3 mb-2 sm:mt-6 sm:mb-4 pl-2 sm:pl-3"
+                style={{ fontSize: '17px', borderLeft: '4px solid #094074', scrollMarginTop: `${navbarHeight + 66}px` }}
               >
                 Day Wise Itinerary
               </h3>
@@ -203,11 +206,11 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
               ) : (
                 <div className="relative">
                   {itineraryDays.map((day, idx) => (
-                    <div key={idx} className="flex gap-4 mb-4 last:mb-0">
+                    <div key={idx} className="flex gap-1.5 sm:gap-4 mb-2 sm:mb-4 last:mb-0">
                       <div className="flex flex-col items-center flex-shrink-0">
                         <span
-                          className="flex items-center justify-center rounded-full text-white font-black text-center"
-                          style={{ width: '46px', height: '46px', background: 'linear-gradient(135deg, #094074, #1a5ba8)', fontSize: '12px', lineHeight: '1.2' }}
+                          className="flex items-center justify-center rounded-full text-white font-black text-center w-[38px] h-[38px] sm:w-[46px] sm:h-[46px] text-[11px] sm:text-[12px]"
+                          style={{ background: 'linear-gradient(135deg, #094074, #1a5ba8)', lineHeight: '1.2' }}
                         >
                           Day<br />{idx + 1}
                         </span>
@@ -215,12 +218,12 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
                       </div>
                       <div className="flex-1 min-w-0 pb-1 rounded-xl overflow-hidden border border-slate-150">
                         <h4
-                          className="font-black text-slate-900"
-                          style={{ fontSize: '14px', background: '#eaf1f8', padding: '10px 14px' }}
+                          className="font-black text-slate-900 px-2.5 py-2 sm:px-3.5 sm:py-2.5"
+                          style={{ fontSize: '14px', background: '#eaf1f8' }}
                         >
                           {day.title || `Day ${idx + 1}`}
                         </h4>
-                        <div style={{ padding: '12px 14px' }}>
+                        <div className="px-2.5 py-1.5 sm:px-3.5 sm:py-3">
                           {(day.description || '').split('\n').map((line) => line.trim()).filter(Boolean).map((line, lIdx) => (
                             <p key={lIdx} className="flex items-start gap-2 text-slate-600 mb-1.5 last:mb-0" style={{ fontSize: '13px', lineHeight: '1.6' }}>
                               <span className="rounded-full flex-shrink-0" style={{ width: '5px', height: '5px', background: '#94a3b8', marginTop: '7px' }}></span>
@@ -237,14 +240,14 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
               {/* Inclusion/Exclusions */}
               <h3
                 id="pkg-inclusion"
-                className="font-black text-slate-900 mt-6 mb-4"
-                style={{ fontSize: '17px', borderLeft: '4px solid #094074', paddingLeft: '12px', scrollMarginTop: `${navbarHeight + 66}px` }}
+                className="font-black text-slate-900 mt-3 mb-2 sm:mt-6 sm:mb-4 pl-2 sm:pl-3"
+                style={{ fontSize: '17px', borderLeft: '4px solid #094074', scrollMarginTop: `${navbarHeight + 66}px` }}
               >
                 Inclusion/Exclusions
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="rounded-xl p-4" style={{ background: '#eafaf0', borderLeft: '4px solid #1fae5c' }}>
-                  <h4 className="font-black text-slate-900 mb-3" style={{ fontSize: '15px' }}>Inclusions</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                <div className="rounded-xl p-2 sm:p-4" style={{ background: '#eafaf0', borderLeft: '4px solid #1fae5c' }}>
+                  <h4 className="font-black text-slate-900 mb-1.5 sm:mb-3" style={{ fontSize: '15px' }}>Inclusions</h4>
                   {inclusions.length > 0 ? (
                     <ul className="space-y-2.5">
                       {inclusions.map((item) => (
@@ -258,8 +261,8 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
                     <p className="text-slate-400 font-semibold" style={{ fontSize: '13px' }}>Contact us for inclusion details.</p>
                   )}
                 </div>
-                <div className="rounded-xl p-4" style={{ background: '#fdecec', borderLeft: '4px solid #e23a3a' }}>
-                  <h4 className="font-black text-slate-900 mb-3" style={{ fontSize: '15px' }}>Exclusions</h4>
+                <div className="rounded-xl p-2 sm:p-4" style={{ background: '#fdecec', borderLeft: '4px solid #e23a3a' }}>
+                  <h4 className="font-black text-slate-900 mb-1.5 sm:mb-3" style={{ fontSize: '15px' }}>Exclusions</h4>
                   {exclusions.length > 0 ? (
                     <ul className="space-y-2.5">
                       {exclusions.map((item) => (
@@ -278,12 +281,12 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
               {/* Additional Info */}
               <h3
                 id="pkg-additional"
-                className="font-black text-slate-900 mt-6 mb-4"
-                style={{ fontSize: '17px', borderLeft: '4px solid #094074', paddingLeft: '12px', scrollMarginTop: `${navbarHeight + 66}px` }}
+                className="font-black text-slate-900 mt-3 mb-2 sm:mt-6 sm:mb-4 pl-2 sm:pl-3"
+                style={{ fontSize: '17px', borderLeft: '4px solid #094074', scrollMarginTop: `${navbarHeight + 66}px` }}
               >
                 Additional Info
               </h3>
-              <h4 className="font-black text-slate-900 mb-3" style={{ fontSize: '15px' }}>Cancellation Policy</h4>
+              <h4 className="font-black text-slate-900 mb-1.5 sm:mb-3" style={{ fontSize: '15px' }}>Cancellation Policy</h4>
               <p className="text-slate-600 mb-2" style={{ fontSize: '13px', lineHeight: '1.7', whiteSpace: 'pre-line' }}>
                 {pkg.cancellation_policy || 'Please contact our team for detailed booking and cancellation terms for this package.'}
               </p>

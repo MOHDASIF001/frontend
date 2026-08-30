@@ -68,13 +68,15 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-2.5 mt-5">
               {[
-                { icon: 'fa-square-facebook', label: 'Facebook' },
-                { icon: 'fa-square-instagram', label: 'Instagram' },
-                { icon: 'fa-youtube', label: 'YouTube' },
+                { icon: 'fa-square-facebook', label: 'Facebook', href: 'https://www.facebook.com/p/Twin-brothers-holidays-100089244964617/' },
+                { icon: 'fa-square-instagram', label: 'Instagram', href: 'https://www.instagram.com/twinbrothersholidays/' },
+                { icon: 'fa-youtube', label: 'YouTube', href: 'https://www.youtube.com/@twinbholidays' },
               ].map((s) => (
                 <a
                   key={s.label}
-                  href="#"
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
                   className="flex items-center justify-center"
                   style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(255,255,255,0.08)', color: '#ff8126', textDecoration: 'none' }}

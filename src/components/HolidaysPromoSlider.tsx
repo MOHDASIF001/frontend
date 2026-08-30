@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
+import { API_BASE_URL, resolveAssetUrl } from '../config';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const promos = [
+interface PromoSlide {
+  title: string;
+  image: string;
+  link?: string | null;
+}
+
+// Fallback shown only if the admin hasn't added any "Packages Page" sliders
+// yet (Admin Panel → Sliders / Offers → Add New → Slider Position: "Packages
+// Page"), so this section is never empty on a fresh install.
+const fallbackPromos: PromoSlide[] = [
   { title: 'Flat 15% Off on First Booking', image: '/images/offer_first_booking.png' },
   { title: 'Kashmir Flights from ₹2,999', image: '/images/offer_kashmir_flights.png' },
   { title: 'International Combo Deals', image: '/images/offer_intl_combo.png' },
@@ -17,6 +27,24 @@ const promos = [
 
 export default function HolidaysPromoSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
+  const [promos, setPromos] = useState<PromoSlide[]>(fallbackPromos);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/sliders.php?position=packages`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+          setPromos(
+            data.data.map((s: { title?: string; image: string; button_link?: string }) => ({
+              title: s.title || 'Special Offer',
+              image: resolveAssetUrl(s.image),
+              link: s.button_link || null,
+            }))
+          );
+        }
+      })
+      .catch((err) => console.error('Error fetching holidays promo slider:', err));
+  }, []);
 
   return (
     <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ marginTop: '30px' }}>
@@ -44,11 +72,17 @@ export default function HolidaysPromoSlider() {
           className="promoSwiper overflow-hidden"
           style={{ borderRadius: '11px' }}
         >
-          {promos.map((promo) => (
-            <SwiperSlide key={promo.title}>
-              <div className="relative w-full aspect-[3/1] sm:aspect-[8.82/1]">
-                <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
-              </div>
+          {promos.map((promo, idx) => (
+            <SwiperSlide key={`${promo.title}-${idx}`}>
+              {promo.link ? (
+                <a href={promo.link} className="relative w-full aspect-[3/1] sm:aspect-[8.82/1] block">
+                  <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
+                </a>
+              ) : (
+                <div className="relative w-full aspect-[3/1] sm:aspect-[8.82/1]">
+                  <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
+                </div>
+              )}
             </SwiperSlide>
           ))}
         </Swiper>

@@ -1188,7 +1188,7 @@ function ExclusiveOffersSection({ offers }: ExclusiveOffersSectionProps) {
   return (
     <div className="container max-w-6xl mb-16 relative" style={{ marginTop: '30px' }}>
       <h2 className="text-3xl font-black text-center text-[var(--color-text-primary)] mb-8">Exclusive Offers</h2>
-      <div className="relative px-8">
+      <div className="relative px-1 md:px-8">
         <Swiper
           modules={[Navigation]}
           slidesPerView={1.2}
@@ -1317,7 +1317,7 @@ function HotelsOfChoiceCarousel({ choiceHotelsList }: HotelsOfChoiceCarouselProp
       `}</style>
       <h2 className="text-3xl font-black text-center text-[var(--color-text-primary)] mb-8">Hotels Of Choice</h2>
       
-      <div className="relative px-8">
+      <div className="relative px-1 md:px-8">
         <Swiper
           modules={[Navigation, Autoplay]}
           slidesPerView={1.2}
@@ -1421,7 +1421,7 @@ function MoodCategoryCarousel({ moods }: MoodCategoryCarouselProps) {
         <h2 className="text-3xl font-black text-center text-[var(--color-text-primary)] mb-2">Book Hotels For Every Mood</h2>
         <p className="text-slate-400 text-xs font-bold text-center uppercase tracking-wider mb-10">Curated Escapes for Your Curious Soul!</p>
         
-        <div className="relative px-8">
+        <div className="relative px-1 md:px-8">
           <Swiper
             modules={[Navigation]}
             slidesPerView={1}
