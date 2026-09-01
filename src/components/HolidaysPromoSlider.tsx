@@ -15,26 +15,21 @@ interface PromoSlide {
   link?: string | null;
 }
 
-// Fallback shown only if the admin hasn't added any "Packages Page" sliders
-// yet (Admin Panel → Sliders / Offers → Add New → Slider Position: "Packages
-// Page"), so this section is never empty on a fresh install.
-const fallbackPromos: PromoSlide[] = [
-  { title: 'Flat 15% Off on First Booking', image: '/images/offer_first_booking.png' },
-  { title: 'Kashmir Flights from ₹2,999', image: '/images/offer_kashmir_flights.png' },
-  { title: 'International Combo Deals', image: '/images/offer_intl_combo.png' },
-  { title: 'Honeymoon Special Packages', image: '/images/offer_honeymoon_special.png' },
-  { title: 'Group Booking Discounts', image: '/images/offer_group_discounts.png' },
-];
-
 interface HolidaysPromoSliderProps {
   // Matches the "Slider Position" dropdown in Admin Panel → Sliders / Offers
   // (e.g. "home", "packages", "hotels", "destinations").
   position?: string;
 }
 
+// No hardcoded fallback images here on purpose — the old placeholders
+// (fake "SKYLINE AIR" / "MyFlights.com" banners, square-shaped and never
+// meant for a wide slider) were fabricated content that could show to real
+// visitors whenever the admin hadn't added a slide for a given position yet.
+// Simply rendering nothing until a real slide exists is safer than showing
+// fake offers or a badly-cropped image.
 export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysPromoSliderProps) {
   const swiperRef = useRef<SwiperType | null>(null);
-  const [promos, setPromos] = useState<PromoSlide[]>(fallbackPromos);
+  const [promos, setPromos] = useState<PromoSlide[]>([]);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/sliders.php?position=${position}`)
@@ -53,6 +48,8 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
       })
       .catch((err) => console.error('Error fetching holidays promo slider:', err));
   }, [position]);
+
+  if (promos.length === 0) return null;
 
   return (
     <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ marginTop: '30px' }}>
