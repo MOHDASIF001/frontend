@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import QuickAccessBanner from '../components/QuickAccessBanner';
+import HolidaysPromoSlider from '../components/HolidaysPromoSlider';
 import HomeMostPopularPackages from '../components/HomeMostPopularPackages';
 import { ExploreWorldSection } from '../components/explore-world/ExploreWorldSection';
 import HomeDestinationSlider from '../components/HomeDestinationSlider';
@@ -70,6 +71,9 @@ export default async function HomePage() {
     <>
       {/* Quick Access Dashboard */}
       <QuickAccessBanner />
+
+      {/* Offers Slider — admin-controlled via Admin Panel → Sliders / Offers → Slider Position: "Home Page" */}
+      <HolidaysPromoSlider position="home" />
 
       {/* Most Popular Packages Section (admin-controlled via "Show on Homepage") */}
       <HomeMostPopularPackages packages={popularPackages} />

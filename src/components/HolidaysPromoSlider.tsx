@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 interface PromoSlide {
   title: string;
   image: string;
+  imageMobile?: string | null;
   link?: string | null;
 }
 
@@ -25,26 +26,33 @@ const fallbackPromos: PromoSlide[] = [
   { title: 'Group Booking Discounts', image: '/images/offer_group_discounts.png' },
 ];
 
-export default function HolidaysPromoSlider() {
+interface HolidaysPromoSliderProps {
+  // Matches the "Slider Position" dropdown in Admin Panel → Sliders / Offers
+  // (e.g. "home", "packages", "hotels", "destinations").
+  position?: string;
+}
+
+export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysPromoSliderProps) {
   const swiperRef = useRef<SwiperType | null>(null);
   const [promos, setPromos] = useState<PromoSlide[]>(fallbackPromos);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/sliders.php?position=packages`)
+    fetch(`${API_BASE_URL}/sliders.php?position=${position}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
           setPromos(
-            data.data.map((s: { title?: string; image: string; button_link?: string }) => ({
+            data.data.map((s: { title?: string; image: string; image_mobile?: string; button_link?: string }) => ({
               title: s.title || 'Special Offer',
               image: resolveAssetUrl(s.image),
+              imageMobile: s.image_mobile ? resolveAssetUrl(s.image_mobile) : null,
               link: s.button_link || null,
             }))
           );
         }
       })
       .catch((err) => console.error('Error fetching holidays promo slider:', err));
-  }, []);
+  }, [position]);
 
   return (
     <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ marginTop: '30px' }}>
@@ -72,19 +80,27 @@ export default function HolidaysPromoSlider() {
           className="promoSwiper overflow-hidden"
           style={{ borderRadius: '11px' }}
         >
-          {promos.map((promo, idx) => (
-            <SwiperSlide key={`${promo.title}-${idx}`}>
-              {promo.link ? (
-                <a href={promo.link} className="relative w-full aspect-[3/1] sm:aspect-[8.82/1] block">
-                  <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
-                </a>
-              ) : (
-                <div className="relative w-full aspect-[3/1] sm:aspect-[8.82/1]">
-                  <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
-                </div>
-              )}
-            </SwiperSlide>
-          ))}
+          {promos.map((promo, idx) => {
+            const picture = (
+              <picture className="block w-full h-full">
+                {promo.imageMobile && <source media="(max-width: 639px)" srcSet={promo.imageMobile} />}
+                <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
+              </picture>
+            );
+            return (
+              <SwiperSlide key={`${promo.title}-${idx}`}>
+                {promo.link ? (
+                  <a href={promo.link} className="relative w-full aspect-[3/1] sm:aspect-[8.82/1] block">
+                    {picture}
+                  </a>
+                ) : (
+                  <div className="relative w-full aspect-[3/1] sm:aspect-[8.82/1]">
+                    {picture}
+                  </div>
+                )}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
 
         <button
