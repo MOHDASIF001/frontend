@@ -52,7 +52,8 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
   if (promos.length === 0) return null;
 
   return (
-    <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ marginTop: '30px' }}>
+    <div style={{ background: 'linear-gradient(180deg, #fbfaf8 0%, #fff 100%)', paddingTop: '30px', paddingBottom: '10px' }}>
+      <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8">
       <div className="relative">
         <style jsx global>{`
           .promoSwiper .swiper-pagination-bullet {
@@ -146,6 +147,7 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
             <i className="fa-solid fa-arrow-right" style={{ fontSize: '12px' }}></i>
           </span>
         </button>
+      </div>
       </div>
     </div>
   );

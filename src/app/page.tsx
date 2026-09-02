@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import QuickAccessBanner from '../components/QuickAccessBanner';
 import HolidaysPromoSlider from '../components/HolidaysPromoSlider';
+import HomeBlogSection from '../components/HomeBlogSection';
 import HomeMostPopularPackages from '../components/HomeMostPopularPackages';
 import { ExploreWorldSection } from '../components/explore-world/ExploreWorldSection';
 import HomeDestinationSlider from '../components/HomeDestinationSlider';
@@ -45,6 +46,21 @@ async function getPopularPackages() {
   }
 }
 
+async function getBlogPosts() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/blogs.php?home=1`, { next: { revalidate: 60 } });
+    if (!res.ok) throw new Error('Failed to fetch blog posts');
+    const data = await res.json();
+    if (data.status === 'success' && Array.isArray(data.data)) {
+      return data.data;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error fetching blog posts:', err);
+    return [];
+  }
+}
+
 async function getDestinations() {
   try {
     const res = await fetch(`${API_BASE_URL}/destinations.php?home=1`, { next: { revalidate: 60 } });
@@ -62,9 +78,10 @@ async function getDestinations() {
   }
 }
 export default async function HomePage() {
-  const [destinations, popularPackages] = await Promise.all([
+  const [destinations, popularPackages, blogPosts] = await Promise.all([
     getDestinations(),
     getPopularPackages(),
+    getBlogPosts(),
   ]);
 
   return (
@@ -160,6 +177,9 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Blog Section — admin-controlled via Admin Panel → Blog */}
+      <HomeBlogSection posts={blogPosts} />
 
       {/* Inquiry Call-to-Action Section */}
       <div className="container-fluid inquiery-main-div">

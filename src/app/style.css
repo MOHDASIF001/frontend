@@ -1,6 +1,6 @@
 .navbar-contener {
     width: 100%;
-    background-color: #fff;
+    background: linear-gradient(180deg, #fbfaf8 0%, #fff 100%);
     /* color: #1D1D54; */
     position: fixed;
     z-index: 999;

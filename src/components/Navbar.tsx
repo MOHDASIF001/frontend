@@ -21,6 +21,7 @@ export default function Navbar() {
     { href: '/hotel', label: 'Hotels', match: ['/hotel', '/hotels-details'] },
     { href: '/cabs', label: 'Cabs', match: ['/cabs'] },
     { href: '/activities', label: 'Activities', match: ['/activities'] },
+    { href: '/blog', label: 'Blog', match: ['/blog'] },
     { href: '/about-us', label: 'About', match: ['/about-us'] },
     { href: '/contact-us', label: 'Contact', match: ['/contact-us'] },
   ];
