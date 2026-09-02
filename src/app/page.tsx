@@ -68,7 +68,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       {/* Quick Access Dashboard */}
       <QuickAccessBanner />
 
@@ -179,6 +179,6 @@ export default async function HomePage() {
 
       {/* SEO Content Section (home page only, shown just above the footer) */}
       <HomeSeoContent />
-    </>
+    </div>
   );
 }
