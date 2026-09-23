@@ -4,7 +4,7 @@ import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid
 import { majorDestinations } from '../../../lib/majorDestinations';
 import { API_BASE_URL } from '../../../config';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface Package {
   id: number;
@@ -25,7 +25,7 @@ interface Package {
 
 async function getPackages(): Promise<Package[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch packages');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {

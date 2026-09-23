@@ -2,11 +2,11 @@ import React from 'react';
 import ContactNowButton from '../../components/ContactNowButton';
 import { API_BASE_URL } from '../../config';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(`${API_BASE_URL}/seo.php?page=contact-us.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/seo.php?page=contact-us.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return {

@@ -7,7 +7,7 @@ import DestinationSeoSection from '../../../components/DestinationSeoSection';
 import { API_BASE_URL } from '../../../config';
 import { Category, slugifyCategory } from '../../../lib/categories';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface Package {
   id: number;
@@ -42,7 +42,7 @@ const destinationMeta: Record<string, { label: string; image: string; matchCitie
 // so the slug is derived from whatever names exist in the DB rather than a fixed list.
 async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/categories.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/categories.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch categories');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
@@ -57,7 +57,7 @@ async function getCategories(): Promise<Category[]> {
 
 async function getPackages(): Promise<Package[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch packages');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
@@ -72,7 +72,7 @@ async function getPackages(): Promise<Package[]> {
 
 async function getPackageBySlug(slug: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     if (data.status === 'success' && data.data) {

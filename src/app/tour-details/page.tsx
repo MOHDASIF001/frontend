@@ -7,7 +7,7 @@ import TourBookingSection from '../../components/TourBookingSection';
 import HomePackageSlider from '../../components/HomePackageSlider';
 import { API_BASE_URL } from '../../config';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -15,7 +15,7 @@ interface PageProps {
 
 async function getPackageDetails(id: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php?id=${id}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php?id=${id}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     if (data.status === 'success' && data.data) {
@@ -30,7 +30,7 @@ async function getPackageDetails(id: string) {
 
 async function getRelatedPackages(category: string, id: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {

@@ -2,11 +2,11 @@ import React, { Suspense } from 'react';
 import DestinationsExplorer from '../../components/DestinationsExplorer';
 import { API_BASE_URL } from '../../config';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(`${API_BASE_URL}/seo.php?page=destinations.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/seo.php?page=destinations.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return {
@@ -24,7 +24,7 @@ export async function generateMetadata() {
 
 async function getPackages() {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch packages');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
