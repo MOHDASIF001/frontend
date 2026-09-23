@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { API_BASE_URL } from '../../../config';
 import { HotelDetailsContent } from '../../../components/HotelDetailsContent';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface HotelSeo {
   id: number;
@@ -17,7 +17,7 @@ interface HotelSeo {
 
 async function getHotel(slug: string): Promise<HotelSeo | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/hotels.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/hotels.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     if (data.status === 'success' && data.data) {

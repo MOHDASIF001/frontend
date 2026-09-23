@@ -7,11 +7,11 @@ import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import { Category, slugifyCategory, getCategoryImage } from '../../lib/categories';
 import { getRegionSlug } from '../../lib/destinationRegions';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(`${API_BASE_URL}/seo.php?page=tour-packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/seo.php?page=tour-packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return {
@@ -29,7 +29,7 @@ export async function generateMetadata() {
 
 async function getPackages() {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch packages');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
@@ -52,7 +52,7 @@ interface Destination {
 
 async function getPopularDestinations(): Promise<Destination[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/destinations.php?popular=1`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/destinations.php?popular=1`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch destinations');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
@@ -95,7 +95,7 @@ const dealCards = [
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/categories.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/categories.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch categories');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {

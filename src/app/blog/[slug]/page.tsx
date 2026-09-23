@@ -4,7 +4,7 @@ import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 import BlogShareBar from '../../../components/BlogShareBar';
 import PackageCard, { PackageCardData } from '../../../components/PackageCard';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface BlogPost {
   id: number;
@@ -36,7 +36,7 @@ interface RelatedPost {
 
 async function getBlogPost(slug: string): Promise<{ post: BlogPost | null; related: RelatedPost[] }> {
   try {
-    const res = await fetch(`${API_BASE_URL}/blogs.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/blogs.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 3600 } });
     if (!res.ok) return { post: null, related: [] };
     const data = await res.json();
     if (data.status === 'success' && data.data) {
@@ -56,7 +56,7 @@ async function getBlogPost(slug: string): Promise<{ post: BlogPost | null; relat
 // active packages if nothing matches, so this section is never empty.
 async function getRelatedPackages(category?: string): Promise<PackageCardData[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const data = await res.json();
     if (data.status !== 'success' || !Array.isArray(data.data)) return [];

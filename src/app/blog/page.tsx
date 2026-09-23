@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { API_BASE_URL, resolveAssetUrl } from '../../config';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface BlogPost {
   id: number;
@@ -26,7 +26,7 @@ async function getBlogData(category?: string) {
     const url = category
       ? `${API_BASE_URL}/blogs.php?category=${encodeURIComponent(category)}`
       : `${API_BASE_URL}/blogs.php`;
-    const res = await fetch(url, { next: { revalidate: 60 } });
+    const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch blog posts');
     const data = await res.json();
     if (data.status === 'success') {

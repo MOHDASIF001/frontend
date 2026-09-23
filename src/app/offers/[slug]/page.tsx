@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 import CopyCodeButton from '../../../components/CopyCodeButton';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 interface OfferData {
   id: number;
@@ -23,7 +23,7 @@ interface OfferData {
 
 async function getOffer(slug: string): Promise<OfferData | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/offers.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/offers.php?slug=${encodeURIComponent(slug)}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     if (data.status === 'success' && data.data) {

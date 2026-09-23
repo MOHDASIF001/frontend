@@ -42,6 +42,7 @@ export const DestinationCards: React.FC = () => {
             src={card.src}
             alt={card.alt}
             fill
+            unoptimized
             className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 640px"
           />

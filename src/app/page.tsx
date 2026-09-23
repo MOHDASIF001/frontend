@@ -11,11 +11,11 @@ import HomeSeoContent from '../components/HomeSeoContent';
 import OpenModalButton from '../components/OpenModalButton';
 import { API_BASE_URL } from '../config';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata() {
   try {
-    const res = await fetch(`${API_BASE_URL}/seo.php?page=index.php`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/seo.php?page=index.php`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error();
     const data = await res.json();
     return {
@@ -33,7 +33,7 @@ export async function generateMetadata() {
 
 async function getPopularPackages() {
   try {
-    const res = await fetch(`${API_BASE_URL}/packages.php?home=1`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/packages.php?home=1`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch packages');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
@@ -48,7 +48,7 @@ async function getPopularPackages() {
 
 async function getBlogPosts() {
   try {
-    const res = await fetch(`${API_BASE_URL}/blogs.php?home=1`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/blogs.php?home=1`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch blog posts');
     const data = await res.json();
     if (data.status === 'success' && Array.isArray(data.data)) {
@@ -63,7 +63,7 @@ async function getBlogPosts() {
 
 async function getDestinations() {
   try {
-    const res = await fetch(`${API_BASE_URL}/destinations.php?home=1`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_BASE_URL}/destinations.php?home=1`, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error('Failed to fetch destinations');
     const data = await res.json();
     
