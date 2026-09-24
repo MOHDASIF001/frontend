@@ -4,8 +4,10 @@ import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid
 import PackageDetailView from '../../../components/PackageDetailView';
 import DestinationsExplorer from '../../../components/DestinationsExplorer';
 import DestinationSeoSection from '../../../components/DestinationSeoSection';
+import DestinationGuide from '../../../components/DestinationGuide';
 import { API_BASE_URL } from '../../../config';
 import { Category, slugifyCategory } from '../../../lib/categories';
+import { getDestinationGuide } from '../../../lib/destinationGuides';
 
 export const revalidate = 60;
 
@@ -34,7 +36,38 @@ const destinationMeta: Record<string, { label: string; image: string; matchCitie
   himachal: { label: 'Himachal', image: '/images/Himachal.webp', matchCities: ['manali', 'himachal', 'shimla', 'kasol'] },
   goa: { label: 'Goa', image: '/images/dest_goa.png', matchCities: ['goa'] },
   dubai: { label: 'Dubai', image: '/images/dest_dubai.png', matchCities: ['dubai'] },
+  rajasthan: { label: 'Rajasthan', image: '/images/default-dest.jpg', matchCities: ['rajasthan', 'jaipur', 'udaipur', 'jodhpur', 'jaisalmer', 'pushkar', 'ajmer', 'bikaner', 'mount abu', 'ranthambore'] },
 };
+
+const aliases: Record<string, string> = { leh: 'ladakh', manali: 'himachal' };
+
+function resolveDestinationSlug(rawSegment: string): string {
+  const rawSlug = rawSegment.replace(/-tours-packages$/, '').toLowerCase();
+  return aliases[rawSlug] ?? rawSlug;
+}
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
+
+export async function generateMetadata({ params }: { params: Promise<{ destination: string }> }) {
+  const { destination } = await params;
+  const guide = getDestinationGuide(resolveDestinationSlug(destination));
+  if (!guide) return {};
+  const url = `${siteUrl}/holidays/${guide.slug}`;
+  return {
+    title: guide.metaTitle,
+    description: guide.metaDescription,
+    keywords: guide.keywords,
+    alternates: { canonical: url },
+    openGraph: {
+      title: guide.metaTitle,
+      description: guide.metaDescription,
+      url,
+      siteName: 'Twin Brothers Holidays',
+      type: 'website',
+    },
+    twitter: { card: 'summary', title: guide.metaTitle, description: guide.metaDescription },
+  };
+}
 
 // Hero category chips on /holidays link here as /holidays/{category}-packages —
 // e.g. /holidays/honeymoon-packages — row-wise by destination, filtered to that
@@ -91,9 +124,7 @@ interface PageProps {
 
 export default async function DestinationPackagesPage({ params }: PageProps) {
   const { destination: rawSegment } = await params;
-  const rawSlug = rawSegment.replace(/-tours-packages$/, '').toLowerCase();
-  const aliases: Record<string, string> = { leh: 'ladakh', manali: 'himachal' };
-  const slug = aliases[rawSlug] ?? rawSlug;
+  const slug = resolveDestinationSlug(rawSegment);
   const meta = destinationMeta[slug];
 
   // Not a known destination — check if it's a category page (e.g. honeymoon-packages).
@@ -138,6 +169,7 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
   }
 
   const destinationName = meta.label;
+  const guide = getDestinationGuide(slug);
 
   const [packages, allCategories] = await Promise.all([getPackages(), getCategories()]);
 
@@ -167,15 +199,36 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
       <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '36px', paddingBottom: '60px' }}>
         {filteredPackages.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-150">
-            <p className="text-slate-500 font-semibold">No {destinationName} packages available right now.</p>
-            <Link href="/holidays" className="mt-3 inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
-              Browse all holiday packages
-            </Link>
+            {guide ? (
+              <>
+                <p className="text-slate-700 font-bold">Ready-made {destinationName} packages are coming soon.</p>
+                <p className="text-slate-500 font-medium mt-1" style={{ fontSize: '14px' }}>
+                  Tell us your dates and budget and we&apos;ll plan a custom {destinationName} itinerary for you.
+                </p>
+                <div className="flex flex-wrap justify-center gap-4 mt-3">
+                  <Link href="/contact-us" className="inline-block font-bold hover:underline" style={{ color: '#ff8126', textDecoration: 'none' }}>
+                    Request a custom itinerary
+                  </Link>
+                  <Link href="/holidays" className="inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
+                    Browse all holiday packages
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-slate-500 font-semibold">No {destinationName} packages available right now.</p>
+                <Link href="/holidays" className="mt-3 inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
+                  Browse all holiday packages
+                </Link>
+              </>
+            )}
           </div>
         ) : (
           <DestinationPackagesGrid packages={filteredPackages} destinationName={destinationName} categories={allCategories.map((c) => c.name)} />
         )}
       </div>
+
+      {guide && <DestinationGuide guide={guide} />}
 
       {/* SEO content + Why Choose Us (shown just above the footer) */}
       <DestinationSeoSection destinationName={destinationName} />
