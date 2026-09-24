@@ -39,9 +39,12 @@ export const API_BASE_URL = resolveApiBaseUrl();
 // must be resolved against the backend's own origin instead.
 export const ASSET_BASE_URL = API_BASE_URL.replace(/\/api\/?$/, '');
 
+const LOCAL_IMAGES = new Set<string>(JSON.parse(process.env.NEXT_PUBLIC_LOCAL_IMAGES || '[]'));
+
 export function resolveAssetUrl(path: string | null | undefined, fallback = ''): string {
   if (!path) return fallback;
   if (/^https?:\/\//i.test(path) || path.startsWith('data:')) return path;
   const clean = path.replace(/^\.?\.?\//, '');
+  if (LOCAL_IMAGES.has(clean)) return `/${clean}`;
   return `${ASSET_BASE_URL}/${clean}`;
 }

@@ -1,6 +1,27 @@
 import type { NextConfig } from "next";
+import fs from "fs";
+import path from "path";
+
+// Legacy DB rows reference bundled site images as "images/xyz.jpg", but the
+// backend's /images folder doesn't have them. List what this frontend ships in
+// public/images so resolveAssetUrl can serve exactly those locally and send
+// everything else (admin uploads) to the backend.
+function listPublicImages(dir: string, prefix = "images"): string[] {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory()
+      ? listPublicImages(path.join(dir, e.name), `${prefix}/${e.name}`)
+      : [`${prefix}/${e.name}`],
+  );
+}
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_LOCAL_IMAGES: JSON.stringify(
+      listPublicImages(path.join(process.cwd(), "public", "images")),
+    ),
+  },
+
   // Vercel's build machine is slower than local dev hardware, and a handful
   // of pages were hitting the default 60s-per-page static generation
   // timeout there even though they build in seconds locally. Give it more room.

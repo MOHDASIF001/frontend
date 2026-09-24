@@ -91,7 +91,9 @@ interface PageProps {
 
 export default async function DestinationPackagesPage({ params }: PageProps) {
   const { destination: rawSegment } = await params;
-  const slug = rawSegment.replace(/-tours-packages$/, '');
+  const rawSlug = rawSegment.replace(/-tours-packages$/, '').toLowerCase();
+  const aliases: Record<string, string> = { leh: 'ladakh', manali: 'himachal' };
+  const slug = aliases[rawSlug] ?? rawSlug;
   const meta = destinationMeta[slug];
 
   // Not a known destination — check if it's a category page (e.g. honeymoon-packages).
