@@ -16,6 +16,7 @@ interface Activity {
   price: number;
   offer_price: number;
   featured_image: string;
+  featured_image_alt?: string | null;
   description?: string;
   inclusions?: string;
   exclusions?: string;
@@ -109,6 +110,10 @@ export default function ActivityDetailPage() {
     .filter(Boolean)
     .map((g) => resolveAssetUrl(g));
   const galleryImages = adminGallery.length > 0 ? adminGallery : [img, img, img, img];
+  const altFor = (i: number) => {
+    const base = activity?.featured_image_alt || activity?.name || '';
+    return i === 0 ? base : `${base} - photo ${i + 1}`;
+  };
   const inclusions = linesToList(activity?.inclusions);
   const displayInclusions = inclusions.length > 0 ? inclusions : defaultInclusions;
   const exclusions = linesToList(activity?.exclusions);
@@ -210,7 +215,7 @@ export default function ActivityDetailPage() {
                 {/* Gallery (mobile): main image on top, thumbnail grid below */}
                 <div className="sm:hidden mb-6">
                   <div className="relative rounded-xl overflow-hidden bg-slate-100 mb-2" style={{ height: '220px' }}>
-                    <img src={galleryImages[activeImageIndex]} alt={activity.name} className="w-full h-full object-cover" />
+                    <img src={galleryImages[activeImageIndex]} alt={altFor(activeImageIndex)} className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => setActiveImageIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length)}
@@ -239,7 +244,7 @@ export default function ActivityDetailPage() {
                           border: activeImageIndex === i && i !== 2 ? '2px solid #1d91f2' : '2px solid transparent',
                         }}
                       >
-                        <img src={thumb} alt={activity.name} className="w-full h-full object-cover" />
+                        <img src={thumb} alt={altFor(i)} className="w-full h-full object-cover" />
                         {i === 2 && (
                           <div
                             className="absolute inset-0 flex flex-col items-center justify-center text-white font-bold"
@@ -267,7 +272,7 @@ export default function ActivityDetailPage() {
                           border: activeImageIndex === i && i !== 2 ? '2px solid #1d91f2' : '2px solid transparent',
                         }}
                       >
-                        <img src={thumb} alt={activity.name} className="w-full h-full object-cover" />
+                        <img src={thumb} alt={altFor(i)} className="w-full h-full object-cover" />
                         {i === 2 && (
                           <div
                             className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs"
@@ -280,7 +285,7 @@ export default function ActivityDetailPage() {
                     ))}
                   </div>
                   <div className="relative flex-1 rounded-xl overflow-hidden bg-slate-100" style={{ height: '290px' }}>
-                    <img src={galleryImages[activeImageIndex]} alt={activity.name} className="w-full h-full object-cover" />
+                    <img src={galleryImages[activeImageIndex]} alt={altFor(activeImageIndex)} className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => setActiveImageIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length)}
@@ -707,7 +712,7 @@ export default function ActivityDetailPage() {
 
           <img
             src={galleryImages[activeImageIndex]}
-            alt={activity.name}
+            alt={altFor(activeImageIndex)}
             className="rounded-xl"
             style={{ maxWidth: '85vw', maxHeight: '80vh', objectFit: 'contain' }}
             onClick={(e) => e.stopPropagation()}

@@ -14,6 +14,7 @@ export interface PackageCardData {
   duration_days: string;
   duration_nights: string;
   featured_image: string;
+  featured_image_alt?: string;
   popular?: string | number;
   featured?: string | number;
   city_breakdown?: string;
@@ -54,7 +55,7 @@ export default function PackageCard({ pkg, layout = 'row' }: { pkg: PackageCardD
     >
       <Link href={`/holidays/${pkg.slug}/`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1.875 / 1', borderRadius: '8px' }}>
-          <img src={img} alt={pkg.title} className="w-full h-full object-cover" />
+          <img src={img} alt={pkg.featured_image_alt || pkg.title} className="w-full h-full object-cover" />
           {hasDiscount && (
             <span
               className="absolute top-3 left-3 font-normal text-white rounded-md flex items-center gap-1.5"

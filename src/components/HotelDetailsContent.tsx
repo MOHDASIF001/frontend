@@ -16,6 +16,7 @@ interface Room {
   id: number;
   room_name: string;
   room_image: string;
+  room_image_alt?: string;
   price_room_only: number;
   benefits_room_only?: string;
   price_with_breakfast: number;
@@ -33,6 +34,7 @@ interface HotelDetails {
   slug?: string;
   location: string;
   featured_image: string;
+  featured_image_alt?: string;
   price_per_night: number;
   star_rating?: number;
   description?: string;
@@ -40,6 +42,7 @@ interface HotelDetails {
   amenities?: string;
   rooms?: Room[];
   gallery?: string[];
+  gallery_alt?: string[];
 }
 
 export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) {
@@ -214,6 +217,10 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
         realHotelImages[(startImgIndex + 2) % realHotelImages.length]
       ];
 
+  const altFor = (i: number) =>
+    (hotel.gallery && hotel.gallery.length > 0 ? hotel.gallery_alt?.[i] : undefined) ||
+    `${hotel.featured_image_alt || hotel.name} - photo ${i + 1}`;
+
   const thumb1 = galleryList[0];
   const thumb2 = galleryList[1] || galleryList[0];
 
@@ -278,7 +285,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                         >
                           <img 
                             src={imgSrc} 
-                            alt={hotel.name} 
+                            alt={altFor(index)} 
                             className="rounded h-full w-full object-cover"
                           />
                         </div>
@@ -309,7 +316,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                     >
                       <img 
                         src={thumb1.startsWith('http') ? thumb1 : `/${thumb1.replace(/^\//, '')}`} 
-                        alt="Detail 1"
+                        alt={altFor(0)}
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -325,7 +332,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                     >
                       <img 
                         src={thumb2.startsWith('http') ? thumb2 : `/${thumb2.replace(/^\//, '')}`} 
-                        alt="Detail 2"
+                        alt={altFor(galleryList[1] ? 1 : 0)}
                         className="h-full w-full object-cover"
                       />
                       <div 
@@ -464,7 +471,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                     >
                       <img 
                         src={imgSrc} 
-                        alt={hotel.name} 
+                        alt={altFor(index)} 
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -632,7 +639,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                         <div className="rounded-lg overflow-hidden my-3" style={{ height: '180px' }}>
                           <img 
                             src={room.room_image ? resolveAssetUrl(room.room_image.replace('../', '')) : '/images/default-hotel.jpg'}
-                            alt={room.room_name} 
+                            alt={room.room_image_alt || room.room_name} 
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -647,7 +654,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                         <div className="w-[100px] h-[75px] rounded-lg overflow-hidden flex-shrink-0">
                           <img 
                             src={room.room_image ? resolveAssetUrl(room.room_image.replace('../', '')) : '/images/default-hotel.jpg'}
-                            alt={room.room_name} 
+                            alt={room.room_image_alt || room.room_name} 
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -939,7 +946,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                       <div className="h-[150px] w-full overflow-hidden relative">
                         <img 
                           src={hotelImage} 
-                          alt={h.name} 
+                          alt={h.gallery_alt?.[0] || h.featured_image_alt || h.name} 
                           className="w-full h-full object-cover" 
                         />
                       </div>
@@ -1008,7 +1015,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
 
             <img 
               src={galleryList[photoIndex].startsWith('http') ? galleryList[photoIndex] : `/${galleryList[photoIndex].replace(/^\//, '')}`} 
-              alt="Lightbox View" 
+              alt={altFor(photoIndex)} 
               className="img-fluid rounded shadow-lg object-contain" 
               style={{ maxHeight: '70vh', maxWidth: '90vw' }}
             />
@@ -1037,7 +1044,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                   style={{ width: '60px', height: '45px', flexShrink: 0 }}
                   onClick={() => setPhotoIndex(i)}
                 >
-                  <img src={thumbSrc} className="w-full h-full object-cover" alt="Thumbnail" />
+                  <img src={thumbSrc} className="w-full h-full object-cover" alt={altFor(i)} />
                 </div>
               );
             })}

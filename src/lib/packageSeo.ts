@@ -9,6 +9,7 @@ export interface PackageSeoSource {
   short_description?: string | null;
   description?: string | null;
   featured_image?: string | null;
+  featured_image_alt?: string | null;
   meta_title?: string | null;
   meta_description?: string | null;
   meta_keywords?: string | null;
@@ -61,7 +62,7 @@ export function buildPackageMetadata(pkg: PackageSeoSource): Metadata {
       url: canonical,
       siteName: 'Twin Brothers Holidays',
       type: 'website',
-      images: image ? [{ url: image, alt: name }] : undefined,
+      images: image ? [{ url: image, alt: clean(pkg.featured_image_alt) || name }] : undefined,
     },
     twitter: {
       card: image ? 'summary_large_image' : 'summary',

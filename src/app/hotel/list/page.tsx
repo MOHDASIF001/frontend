@@ -14,6 +14,7 @@ interface Hotel {
   location: string;
   city: string;
   featured_image: string;
+  featured_image_alt?: string;
   gallery?: string[];
   price_per_night: number;
   star_rating?: number;
@@ -147,7 +148,7 @@ function ListingHotelCard({ hotel, detailsQuery }: ListingHotelCardProps) {
       <div className="w-full md:w-[240px] h-[200px] md:h-[190px] bg-slate-100 rounded-2xl overflow-hidden relative flex-shrink-0">
         <Image 
           src={rotatedImages[activeImgIdx]} 
-          alt={hotel.name ? hotel.name.replaceAll('&amp;', '&') : ''}
+          alt={hotel.featured_image_alt || (hotel.name ? hotel.name.replaceAll('&amp;', '&') : '')}
           fill
           sizes="(max-width: 768px) 100vw, 240px"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -442,6 +443,7 @@ function HotelListContent() {
     title?: string;
     subtitle?: string;
     image: string;
+    image_alt?: string | null;
     button_text?: string;
     button_link?: string;
   }
@@ -1392,7 +1394,7 @@ function HotelListContent() {
               >
                 <img
                   src={resolveAssetUrl(promoBanner.image.replace(/^\.\.\//, ''))}
-                  alt={promoBanner.title || 'Special offer'}
+                  alt={promoBanner.image_alt || promoBanner.title || 'Special offer'}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div

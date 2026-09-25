@@ -17,6 +17,7 @@ interface OfferData {
   page?: string;
   valid_until?: string;
   image?: string;
+  image_alt?: string | null;
   meta_title?: string;
   meta_description?: string;
 }
@@ -100,7 +101,7 @@ export default async function OfferDetailPage({ params }: PageProps) {
       {/* Hero */}
       <div className="relative w-full">
         <div className="relative w-full h-[260px] sm:h-[340px] overflow-hidden">
-          <img src={img} alt={offer.title} className="w-full h-full object-cover" />
+          <img src={img} alt={offer.image_alt || offer.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(9,11,26,0.35) 0%, rgba(9,11,26,0.75) 100%)' }} />
           <div className="absolute inset-0 flex items-end">
             <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8">

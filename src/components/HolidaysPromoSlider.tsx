@@ -11,6 +11,7 @@ import 'swiper/css/pagination';
 interface PromoSlide {
   title: string;
   image: string;
+  image_alt?: string | null;
   imageMobile?: string | null;
   link?: string | null;
 }
@@ -37,8 +38,9 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
       .then((data) => {
         if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
           setPromos(
-            data.data.map((s: { title?: string; image: string; image_mobile?: string; button_link?: string }) => ({
+            data.data.map((s: { title?: string; image: string; image_alt?: string; image_mobile?: string; button_link?: string }) => ({
               title: s.title || 'Special Offer',
+              image_alt: s.image_alt || null,
               image: resolveAssetUrl(s.image),
               imageMobile: s.image_mobile ? resolveAssetUrl(s.image_mobile) : null,
               link: s.button_link || null,
@@ -82,7 +84,7 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
             const picture = (
               <picture className="block w-full h-full">
                 {promo.imageMobile && <source media="(max-width: 639px)" srcSet={promo.imageMobile} />}
-                <img src={promo.image} alt={promo.title} className="w-full h-full object-cover" />
+                <img src={promo.image} alt={promo.image_alt || promo.title} className="w-full h-full object-cover" />
               </picture>
             );
             return (

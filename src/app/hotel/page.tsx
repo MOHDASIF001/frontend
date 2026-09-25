@@ -21,6 +21,7 @@ interface Hotel {
   location: string;
   city?: string;
   featured_image: string;
+  featured_image_alt?: string;
   price_per_night: number;
   star_rating?: number;
   short_description?: string;
@@ -1176,6 +1177,7 @@ interface ExclusiveOffer {
   code?: string;
   valid_until?: string;
   image?: string;
+  image_alt?: string | null;
 }
 
 interface ExclusiveOffersSectionProps {
@@ -1219,7 +1221,7 @@ function ExclusiveOffersSection({ offers }: ExclusiveOffersSectionProps) {
                   <div className="relative h-[160px] w-full overflow-hidden">
                     <img
                       src={img}
-                      alt={o.title}
+                      alt={o.image_alt || o.title}
                       className="w-full h-full object-cover"
                     />
                     {/* Coupon Code badge on top right of image */}
@@ -1354,7 +1356,7 @@ function HotelsOfChoiceCarousel({ choiceHotelsList }: HotelsOfChoiceCarouselProp
                   >
                     <img
                       src={img}
-                      alt={h.name}
+                      alt={h.featured_image_alt || h.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     {/* Subtle dark overlay at the bottom so the white card pops */}

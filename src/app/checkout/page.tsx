@@ -24,6 +24,7 @@ interface HotelDetails {
   name: string;
   location: string;
   featured_image: string;
+  featured_image_alt?: string;
   price_per_night: number;
   star_rating?: number;
   rooms?: Room[];
@@ -310,7 +311,7 @@ function CheckoutContent() {
               <div className="w-full sm:w-[160px] rounded-xl overflow-hidden flex-shrink-0" style={{ height: isMobile ? '156px' : '120px' }}>
                 <img 
                   src={hotel.featured_image ? resolveAssetUrl(hotel.featured_image.replace('../', '')) : '/images/default-hotel.jpg'}
-                  alt={hotel.name} 
+                  alt={hotel.featured_image_alt || hotel.name} 
                   className="w-full h-full object-cover"
                 />
               </div>

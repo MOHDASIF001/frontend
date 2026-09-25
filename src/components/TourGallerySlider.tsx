@@ -13,9 +13,10 @@ import 'swiper/css/navigation';
 interface TourGallerySliderProps {
   gallery: string[];
   title: string;
+  alts?: string[];
 }
 
-export default function TourGallerySlider({ gallery, title }: TourGallerySliderProps) {
+export default function TourGallerySlider({ gallery, title, alts }: TourGallerySliderProps) {
   if (gallery.length === 0) return null;
 
   return (
@@ -43,7 +44,7 @@ export default function TourGallerySlider({ gallery, title }: TourGallerySliderP
           return (
             <SwiperSlide key={index}>
               <div className="tour-dtls-hero-card-div">
-                <img src={imgSrc} alt={`${title} - Gallery ${index + 1}`} />
+                <img src={imgSrc} alt={alts?.[index] || `${title} - Gallery ${index + 1}`} />
               </div>
             </SwiperSlide>
           );

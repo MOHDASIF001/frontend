@@ -48,6 +48,7 @@ interface Destination {
   slug: string;
   country: string;
   image: string;
+  image_alt?: string | null;
 }
 
 async function getPopularDestinations(): Promise<Destination[]> {
@@ -69,7 +70,7 @@ async function getPopularDestinations(): Promise<Destination[]> {
 // belong to Kashmir) — collapse them down to one trending card per region.
 function dedupeByRegion(destinations: Destination[]) {
   const seen = new Set<string>();
-  const result: { name: string; image: string; href: string }[] = [];
+  const result: { name: string; image: string; href: string; image_alt?: string | null }[] = [];
   for (const dest of destinations) {
     const regionSlug = getRegionSlug(dest.slug);
     const key = regionSlug || dest.slug;
@@ -78,6 +79,7 @@ function dedupeByRegion(destinations: Destination[]) {
     result.push({
       name: regionSlug ? regionSlug.charAt(0).toUpperCase() + regionSlug.slice(1) : dest.name,
       image: dest.image ? resolveAssetUrl(dest.image) : '/images/destination-1.jpg',
+      image_alt: dest.image_alt,
       href: regionSlug ? `/holidays/${regionSlug}` : '/destinations',
     });
   }
@@ -190,7 +192,7 @@ export default async function HolidaysPage({ searchParams }: PageProps) {
                 style={{ textDecoration: 'none' }}
               >
                 <div className="w-full h-[180px] rounded-2xl overflow-hidden mb-2">
-                  <img src={dest.image} alt={dest.name} className="w-full h-full object-cover" />
+                  <img src={dest.image} alt={dest.image_alt || dest.name} className="w-full h-full object-cover" />
                 </div>
                 <span className="font-black text-slate-900" style={{ fontSize: '15px' }}>{dest.name}</span>
               </Link>

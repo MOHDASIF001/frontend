@@ -14,6 +14,7 @@ interface CabOffer {
   tag?: string;
   code?: string;
   image?: string;
+  image_alt?: string | null;
 }
 
 export default function CabsPage() {
@@ -91,6 +92,7 @@ export default function CabsPage() {
     state: string;
     value: string;
     image: string | null;
+    image_alt?: string | null;
   }
   const [popularCities, setPopularCities] = useState<PopularCity[]>([]);
 
@@ -129,6 +131,7 @@ export default function CabsPage() {
     state: string;
     value: string;
     image: string | null;
+    image_alt?: string | null;
     hourly_price: number | null;
     drop_name?: string;
     drop_value?: string;
@@ -1066,7 +1069,7 @@ export default function CabsPage() {
                   style={{ textDecoration: 'none' }}
                 >
                   <div className="h-[135px] overflow-hidden relative rounded-[14px]">
-                    <img src={img} alt={o.title} className="w-full h-full object-cover" />
+                    <img src={img} alt={o.image_alt || o.title} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/45"></div>
                     <div className="absolute inset-0 flex flex-col justify-start p-5 text-white text-start">
                       <span className="font-semibold mb-0.5 block" style={{ fontSize: '11px', color: '#e2e8f0' }}>{o.tag}</span>
@@ -1155,7 +1158,7 @@ export default function CabsPage() {
                 >
                   <img
                     src={city.image ? resolveAssetUrl(city.image) : '/images/default-dest.jpg'}
-                    alt={`${city.name} cab rental`}
+                    alt={city.image_alt || `${city.name} cab rental`}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -1286,7 +1289,7 @@ export default function CabsPage() {
                 <div className="w-full sm:w-[145px] aspect-square sm:h-[145px] overflow-hidden rounded-[26px] border border-slate-100/50 shadow-sm hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
                   <img
                     src={city.image ? resolveAssetUrl(city.image) : '/images/default-dest.jpg'}
-                    alt={city.name}
+                    alt={city.image_alt || city.name}
                     className="w-full h-full object-cover"
                   />
                 </div>

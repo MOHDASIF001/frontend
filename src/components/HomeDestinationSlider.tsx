@@ -16,6 +16,7 @@ interface Destination {
   name: string;
   slug?: string;
   image: string;
+  image_alt?: string | null;
   status: string;
   display_order: string;
   min_price?: string;
@@ -70,7 +71,7 @@ export default function HomeDestinationSlider({ destinations }: HomeDestinationS
                 <SwiperSlide key={dest.id}>
                   <div className="card-destination-main-div">
                     <Link href={destHref}>
-                      <img src={img} alt={dest.name} />
+                      <img src={img} alt={dest.image_alt || dest.name} />
                     </Link>
                     <div className="desti-overflow"></div>
                     <Link href={destHref}>

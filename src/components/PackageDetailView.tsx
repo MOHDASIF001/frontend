@@ -28,7 +28,9 @@ interface PackageData {
   cancellation_policy?: string;
   itinerary?: ItineraryDay[] | string;
   featured_image: string;
+  featured_image_alt?: string;
   gallery?: string[];
+  gallery_alt?: string[];
 }
 
 const navSections = [
@@ -65,9 +67,15 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
 
   // Main (featured) image first, then the gallery images.
   const featuredSrc = pkg.featured_image ? resolveAssetUrl(pkg.featured_image.replace(/^\.\.\//, '')) : '';
-  const gallerySrcs = (pkg.gallery || []).map((g) => resolveAssetUrl(g)).filter((g) => g !== featuredSrc);
-  const images = [...(featuredSrc ? [featuredSrc] : []), ...gallerySrcs];
-  if (images.length === 0) images.push('/images/default-package.jpg');
+  const baseAlt = pkg.featured_image_alt || pkg.title;
+  const slides: { src: string; alt: string }[] = [];
+  if (featuredSrc) slides.push({ src: featuredSrc, alt: baseAlt });
+  (pkg.gallery || []).forEach((g, i) => {
+    const src = resolveAssetUrl(g);
+    if (src !== featuredSrc) slides.push({ src, alt: pkg.gallery_alt?.[i] || `${baseAlt} - photo ${slides.length}` });
+  });
+  if (slides.length === 0) slides.push({ src: '/images/default-package.jpg', alt: pkg.title });
+  const images = slides.map((s) => s.src);
 
   const inclusions = pkg.inclusions ? pkg.inclusions.split('\n').map((s) => s.trim()).filter(Boolean) : [];
   const exclusions = pkg.exclusions ? pkg.exclusions.split('\n').map((s) => s.trim()).filter(Boolean) : [];
@@ -122,7 +130,7 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
           <div className="flex-1 min-w-0">
             {/* Gallery */}
             <div className="relative rounded-2xl overflow-hidden mb-3 sm:mb-6 h-[220px] sm:h-[300px] lg:h-[360px]">
-              <img src={images[activeImage]} alt={pkg.title} className="w-full h-full object-cover" />
+              <img src={images[activeImage]} alt={slides[activeImage]?.alt || pkg.title} className="w-full h-full object-cover" />
               {images.length > 1 && (
                 <>
                   <button

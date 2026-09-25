@@ -10,6 +10,7 @@ interface Cab {
   name: string;
   vehicle_type: string;
   featured_image: string;
+  featured_image_alt?: string | null;
   price?: number;
   price_per_day?: number;
   capacity?: number;
@@ -87,7 +88,7 @@ function CabListingCard({ cab, ctx }: { cab: Cab; ctx: BookingContext }) {
       <div className="flex flex-col md:flex-row gap-4" style={{ padding: '15px' }}>
         {/* Image */}
         <div className="w-full md:w-[220px] h-[150px] flex-shrink-0 rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center">
-          <img src={image} alt={cab.name} className="w-full h-full object-contain p-2" />
+          <img src={image} alt={cab.featured_image_alt || cab.name} className="w-full h-full object-contain p-2" />
         </div>
 
         {/* Middle Info */}
@@ -195,7 +196,7 @@ function CabListingCardMobile({ cab, ctx }: { cab: Cab; ctx: BookingContext }) {
       {/* Top: image + title/tags */}
       <div className="flex gap-3">
         <div className="relative w-[84px] h-[70px] flex-shrink-0 rounded-lg overflow-hidden bg-slate-50 flex items-center justify-center">
-          <img src={image} alt={cab.name} className="w-full h-full object-contain p-1" />
+          <img src={image} alt={cab.featured_image_alt || cab.name} className="w-full h-full object-contain p-1" />
           <span
             className="absolute bottom-0 left-0 right-0 text-white text-center font-bold uppercase"
             style={{

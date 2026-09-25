@@ -13,6 +13,7 @@ interface Package {
   price: string;
   discounted_price: string;
   featured_image: string;
+  featured_image_alt?: string;
 }
 
 const internationalKeywords = ['dubai', 'uae', 'thailand', 'bangkok', 'phuket', 'singapore', 'malaysia', 'vietnam', 'bali', 'indonesia', 'europe', 'maldives'];
@@ -154,7 +155,7 @@ export default function HolidaysHandpicked({ packages, activeCategory = '' }: { 
                 style={{ textDecoration: 'none' }}
               >
                 <div className="relative w-full h-[150px] bg-slate-100">
-                  <img src={img} alt={pkg.title} className="w-full h-full object-cover" />
+                  <img src={img} alt={pkg.featured_image_alt || pkg.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-3">
                   <h3 className="font-black text-slate-900 truncate flex items-center gap-1.5" style={{ fontSize: '15px' }}>

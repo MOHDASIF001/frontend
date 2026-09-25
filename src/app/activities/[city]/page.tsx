@@ -15,6 +15,7 @@ interface Activity {
   price: number;
   offer_price: number;
   featured_image: string;
+  featured_image_alt?: string | null;
   description?: string;
 }
 
@@ -341,7 +342,7 @@ export default function CityActivitiesPage() {
                   className="twb-activity-card flex flex-col sm:flex-row gap-4 bg-white border border-slate-150 rounded-2xl mb-4"
                 >
                   <div className="relative w-full sm:w-[260px] h-[152px] sm:h-[310px] self-start rounded-xl overflow-hidden flex-shrink-0 bg-slate-100">
-                    <img src={img} alt={act.name || 'Activity'} className="w-full h-full object-cover" />
+                    <img src={img} alt={act.featured_image_alt || act.name || 'Activity'} className="w-full h-full object-cover" />
                     {/* Rating badge overlay (mobile only) - only when a real rating is set */}
                     {ratingNum > 0 && (
                       <span

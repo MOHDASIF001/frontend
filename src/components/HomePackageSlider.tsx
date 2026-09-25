@@ -19,6 +19,7 @@ interface Package {
   price: string;
   discounted_price: string;
   featured_image: string;
+  featured_image_alt?: string;
   short_description: string;
   location_name?: string;
 }
@@ -74,7 +75,7 @@ export default function HomePackageSlider({ packages, title, description, hideHe
                 <SwiperSlide key={pkg.id}>
                   <div className="package-card-main-div">
                     <div className="package-image-div">
-                      <img src={img} alt={pkg.title} />
+                      <img src={img} alt={pkg.featured_image_alt || pkg.title} />
                     </div>
                     <div className="package-card-text-detail-div">
                       <h3>

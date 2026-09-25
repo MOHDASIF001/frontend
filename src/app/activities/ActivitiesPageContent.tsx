@@ -16,6 +16,7 @@ interface Activity {
   price: number;
   offer_price: number;
   featured_image: string;
+  featured_image_alt?: string | null;
 }
 
 interface Destination {
@@ -23,6 +24,7 @@ interface Destination {
   name: string;
   country?: string;
   image: string;
+  image_alt?: string | null;
   activity_count?: number | string;
 }
 
@@ -221,7 +223,7 @@ export default function ActivitiesPage() {
         style={{ background: 'linear-gradient(135deg, #fff3eb, #ffe4cf)', border: '1px solid #ffd9b8', padding: '7px' }}
       >
         <div className="w-[68px] h-[68px] rounded-lg overflow-hidden flex-shrink-0 bg-slate-100">
-          <img src={img} alt={act.name || 'Activity'} className="w-full h-full object-cover" />
+          <img src={img} alt={act.featured_image_alt || act.name || 'Activity'} className="w-full h-full object-cover" />
         </div>
         <div className="flex-1 min-w-0" style={{ lineHeight: '1' }}>
           <h3 className="font-black text-slate-900 truncate" style={{ fontSize: '15px', lineHeight: '1', margin: 0 }}>
@@ -318,7 +320,7 @@ export default function ActivitiesPage() {
                           className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 cursor-pointer transition-colors"
                         >
                           <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100">
-                            <img src={img} alt={act.name} className="w-full h-full object-cover" />
+                            <img src={img} alt={act.featured_image_alt || act.name} className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1 min-w-0 text-start">
                             <div className="text-sm font-bold text-slate-800 truncate">{act.name}</div>
@@ -403,7 +405,7 @@ export default function ActivitiesPage() {
                   className="flex-shrink-0 w-[200px] text-left border-none bg-transparent cursor-pointer p-0"
                 >
                   <div className="relative w-full h-[240px] rounded-2xl overflow-hidden">
-                    <img src={img} alt={dest.name} className="w-full h-full object-cover" />
+                    <img src={img} alt={dest.image_alt || dest.name} className="w-full h-full object-cover" />
                     <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%)' }}></div>
                     <span
                       className="absolute top-3 left-3 text-white font-bold rounded-full"
@@ -499,7 +501,7 @@ export default function ActivitiesPage() {
                   className="flex-shrink-0 w-[200px] text-left border-none bg-transparent cursor-pointer p-0"
                 >
                   <div className="relative w-full h-[240px] rounded-2xl overflow-hidden">
-                    <img src={img} alt={dest.name} className="w-full h-full object-cover" />
+                    <img src={img} alt={dest.image_alt || dest.name} className="w-full h-full object-cover" />
                     <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%)' }}></div>
                     <span
                       className="absolute top-3 left-3 text-white font-bold rounded-full"

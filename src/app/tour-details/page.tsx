@@ -78,10 +78,15 @@ export default async function TourDetailsPage({ searchParams }: PageProps) {
   // Parse gallery path
   // Main (featured) image first, then the gallery images.
   const featured = pkg.featured_image ? pkg.featured_image.replace(/^\.\.\//, '') : '';
-  const gallery: string[] = [
-    ...(featured ? [featured] : []),
-    ...((pkg.gallery || []) as string[]).filter((g) => g !== featured),
-  ];
+  const baseAlt: string = pkg.featured_image_alt || pkg.title;
+  const gallery: string[] = [];
+  const galleryAlts: string[] = [];
+  if (featured) { gallery.push(featured); galleryAlts.push(baseAlt); }
+  ((pkg.gallery || []) as string[]).forEach((g, i) => {
+    if (g === featured) return;
+    gallery.push(g);
+    galleryAlts.push(pkg.gallery_alt?.[i] || `${baseAlt} - photo ${gallery.length - 1}`);
+  });
 
   // Itinerary format
   let itineraryList = [];
@@ -120,7 +125,7 @@ export default async function TourDetailsPage({ searchParams }: PageProps) {
               <span className="ms-2">({reviewsCount} Reviews)</span>
             </p>
           </div>
-          <TourGallerySlider gallery={gallery} title={pkg.title} />
+          <TourGallerySlider gallery={gallery} title={pkg.title} alts={galleryAlts} />
         </div>
       </div>
 
