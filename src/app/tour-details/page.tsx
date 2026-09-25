@@ -6,6 +6,7 @@ import TourItineraryAccordion from '../../components/TourItineraryAccordion';
 import TourBookingSection from '../../components/TourBookingSection';
 import HomePackageSlider from '../../components/HomePackageSlider';
 import { API_BASE_URL } from '../../config';
+import { buildPackageMetadata } from '../../lib/packageSeo';
 
 export const revalidate = 60;
 
@@ -53,10 +54,7 @@ export async function generateMetadata({ searchParams }: PageProps) {
   const pkg = await getPackageDetails(id);
   if (!pkg) return { title: 'Tour Details - Twin Brothers Holidays' };
   
-  return {
-    title: `${pkg.title} - Twin Brothers Holidays`,
-    description: pkg.short_description || `Detail of ${pkg.title}`,
-  };
+  return buildPackageMetadata(pkg);
 }
 
 export default async function TourDetailsPage({ searchParams }: PageProps) {
@@ -78,10 +76,12 @@ export default async function TourDetailsPage({ searchParams }: PageProps) {
   const exclusions = pkg.exclusions ? pkg.exclusions.split('\n').map((i: string) => i.trim()).filter((i: string) => i !== '') : [];
 
   // Parse gallery path
-  const gallery = pkg.gallery || [];
-  if (gallery.length === 0 && pkg.featured_image) {
-    gallery.push(pkg.featured_image);
-  }
+  // Main (featured) image first, then the gallery images.
+  const featured = pkg.featured_image ? pkg.featured_image.replace(/^\.\.\//, '') : '';
+  const gallery: string[] = [
+    ...(featured ? [featured] : []),
+    ...((pkg.gallery || []) as string[]).filter((g) => g !== featured),
+  ];
 
   // Itinerary format
   let itineraryList = [];

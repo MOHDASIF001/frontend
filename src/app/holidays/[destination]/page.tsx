@@ -8,6 +8,7 @@ import DestinationGuide from '../../../components/DestinationGuide';
 import { API_BASE_URL } from '../../../config';
 import { Category, slugifyCategory } from '../../../lib/categories';
 import { getDestinationGuide } from '../../../lib/destinationGuides';
+import { buildPackageMetadata } from '../../../lib/packageSeo';
 
 export const revalidate = 60;
 
@@ -50,8 +51,16 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
 
 export async function generateMetadata({ params }: { params: Promise<{ destination: string }> }) {
   const { destination } = await params;
-  const guide = getDestinationGuide(resolveDestinationSlug(destination));
-  if (!guide) return {};
+  const destSlug = resolveDestinationSlug(destination);
+  const guide = getDestinationGuide(destSlug);
+  if (!guide) {
+    // Individual package pages (/holidays/{package-slug}) get their own SEO from the admin panel.
+    if (!destinationMeta[destSlug]) {
+      const pkg = await getPackageBySlug(destination);
+      if (pkg) return buildPackageMetadata(pkg);
+    }
+    return {};
+  }
   const url = `${siteUrl}/holidays/${guide.slug}`;
   return {
     title: guide.metaTitle,

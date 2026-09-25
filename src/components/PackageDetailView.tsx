@@ -63,9 +63,11 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
   const hasDiscount = discountedPrice > 0 && discountedPrice < price;
   const finalPrice = hasDiscount ? discountedPrice : price;
 
-  const images = pkg.gallery && pkg.gallery.length > 0
-    ? pkg.gallery.map((g) => resolveAssetUrl(g))
-    : [pkg.featured_image ? resolveAssetUrl(pkg.featured_image.replace(/^\.\.\//, '')) : '/images/default-package.jpg'];
+  // Main (featured) image first, then the gallery images.
+  const featuredSrc = pkg.featured_image ? resolveAssetUrl(pkg.featured_image.replace(/^\.\.\//, '')) : '';
+  const gallerySrcs = (pkg.gallery || []).map((g) => resolveAssetUrl(g)).filter((g) => g !== featuredSrc);
+  const images = [...(featuredSrc ? [featuredSrc] : []), ...gallerySrcs];
+  if (images.length === 0) images.push('/images/default-package.jpg');
 
   const inclusions = pkg.inclusions ? pkg.inclusions.split('\n').map((s) => s.trim()).filter(Boolean) : [];
   const exclusions = pkg.exclusions ? pkg.exclusions.split('\n').map((s) => s.trim()).filter(Boolean) : [];
