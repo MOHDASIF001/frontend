@@ -17,6 +17,7 @@ interface Activity {
   offer_price: number;
   featured_image: string;
   featured_image_alt?: string | null;
+  gallery_alt?: Record<string, string> | null;
   description?: string;
   inclusions?: string;
   exclusions?: string;
@@ -104,13 +105,15 @@ export default function ActivityDetailPage() {
   );
 
   const img = activity?.featured_image ? resolveAssetUrl(activity.featured_image) : '/images/default-activity.jpg';
-  const adminGallery = (activity?.gallery_images || '')
+  const galleryRaw = (activity?.gallery_images || '')
     .split(',')
     .map((g) => g.trim())
-    .filter(Boolean)
-    .map((g) => resolveAssetUrl(g));
+    .filter(Boolean);
+  const adminGallery = galleryRaw.map((g) => resolveAssetUrl(g));
   const galleryImages = adminGallery.length > 0 ? adminGallery : [img, img, img, img];
   const altFor = (i: number) => {
+    const custom = adminGallery.length > 0 ? activity?.gallery_alt?.[galleryRaw[i]] : undefined;
+    if (custom) return custom;
     const base = activity?.featured_image_alt || activity?.name || '';
     return i === 0 ? base : `${base} - photo ${i + 1}`;
   };
