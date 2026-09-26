@@ -20,6 +20,12 @@ interface HolidaysPromoSliderProps {
   // Matches the "Slider Position" dropdown in Admin Panel → Sliders / Offers
   // (e.g. "home", "packages", "hotels", "destinations").
   position?: string;
+  // Slides fetched server-side (see fetchPromoSlides in lib/promoSlides) and passed
+  // in as a prop. When given, this skips the client-side fetch below entirely, so
+  // the slide (and its hero image) is present in the initial HTML instead of only
+  // appearing after hydration + a client round trip — the slider was the page's
+  // largest above-the-fold image and the client fetch was delaying its LCP.
+  initialPromos?: PromoSlide[];
 }
 
 // No hardcoded fallback images here on purpose — the old placeholders
@@ -28,11 +34,12 @@ interface HolidaysPromoSliderProps {
 // visitors whenever the admin hadn't added a slide for a given position yet.
 // Simply rendering nothing until a real slide exists is safer than showing
 // fake offers or a badly-cropped image.
-export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysPromoSliderProps) {
+export default function HolidaysPromoSlider({ position = 'packages', initialPromos }: HolidaysPromoSliderProps) {
   const swiperRef = useRef<SwiperType | null>(null);
-  const [promos, setPromos] = useState<PromoSlide[]>([]);
+  const [promos, setPromos] = useState<PromoSlide[]>(initialPromos || []);
 
   useEffect(() => {
+    if (initialPromos) return; // already have server-fetched slides, nothing to do
     fetch(`${API_BASE_URL}/sliders.php?position=${position}`)
       .then((res) => res.json())
       .then((data) => {
@@ -49,7 +56,7 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
         }
       })
       .catch((err) => console.error('Error fetching holidays promo slider:', err));
-  }, [position]);
+  }, [position, initialPromos]);
 
   if (promos.length === 0) return null;
 
@@ -84,7 +91,13 @@ export default function HolidaysPromoSlider({ position = 'packages' }: HolidaysP
             const picture = (
               <picture className="block w-full h-full">
                 {promo.imageMobile && <source media="(max-width: 639px)" srcSet={promo.imageMobile} />}
-                <img src={promo.image} alt={promo.image_alt || promo.title} className="w-full h-full object-cover" />
+                <img
+                  src={promo.image}
+                  alt={promo.image_alt || promo.title}
+                  className="w-full h-full object-cover"
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                />
               </picture>
             );
             return (

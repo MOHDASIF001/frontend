@@ -41,6 +41,21 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // The bundled site images in public/images (logo, section icons, hero photos)
+  // are served with no caching by default, so a returning visitor re-downloads
+  // them on every visit (flagged by PageSpeed as "inefficient cache lifetime").
+  // These are static build assets, not admin-uploaded content, so caching them
+  // is safe; 30 days (not a full year) leaves headroom in case one is ever
+  // swapped in place under the same filename.
+  async headers() {
+    return [
+      {
+        source: "/images/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, stale-while-revalidate=86400" }],
+      },
+    ];
+  },
+
   // In production the frontend and the PHP API/uploads live on the same
   // domain, so admin-uploaded image paths like "/uploads/..." resolve
   // automatically. Locally they're on different origins (this dev server vs

@@ -9,6 +9,7 @@ import HomeDestinationSlider from '../components/HomeDestinationSlider';
 import HomeSeoContent from '../components/HomeSeoContent';
 import OpenModalButton from '../components/OpenModalButton';
 import { API_BASE_URL } from '../config';
+import { fetchPromoSlides } from '../lib/promoSlides';
 
 export const revalidate = 60;
 
@@ -82,10 +83,11 @@ async function getDestinations() {
   }
 }
 export default async function HomePage() {
-  const [destinations, popularPackages, blogPosts] = await Promise.all([
+  const [destinations, popularPackages, blogPosts, promoSlides] = await Promise.all([
     getDestinations(),
     getPopularPackages(),
     getBlogPosts(),
+    fetchPromoSlides('home'),
   ]);
 
   return (
@@ -100,7 +102,7 @@ export default async function HomePage() {
       <QuickAccessBanner />
 
       {/* Offers Slider — admin-controlled via Admin Panel → Sliders / Offers → Slider Position: "Home Page" */}
-      <HolidaysPromoSlider position="home" />
+      <HolidaysPromoSlider position="home" initialPromos={promoSlides} />
 
       {/* Most Popular Packages Section (admin-controlled via "Show on Homepage") */}
       <HomeMostPopularPackages packages={popularPackages} />
@@ -135,7 +137,7 @@ export default async function HomePage() {
             <div className="col-lg-1 hid-about-col"></div>
             <div className="col-lg-4">
               <div className="about-img-div">
-                <img className="about-img-desktop" width="100%" src="/images/about-desktop.jpg" alt="About Twin Brothers Holidays" />
+                <img className="about-img-desktop" width="100%" loading="lazy" src="/images/about-desktop.jpg" alt="About Twin Brothers Holidays" />
               </div>
             </div>
           </div>
@@ -181,7 +183,7 @@ export default async function HomePage() {
             <div className="col-lg-7">
               <div className="why-choose-img-div">
                 <div className="choose-color-div"></div>
-                <img src="/images/men-choos.png" alt="Why Choose Us" />
+                <img src="/images/men-choos.png" alt="Why Choose Us" loading="lazy" />
               </div>
             </div>
           </div>
