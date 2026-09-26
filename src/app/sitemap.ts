@@ -29,17 +29,27 @@ const REGION_SLUGS = [
 // placeholder city there would sitemap pages with no real content.
 const GROUP_TOUR_SLUGS = ['kashmir', 'ladakh', 'himachal', 'kerala', 'goa', 'rajasthan', 'dubai'];
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function safeJson(url: string) {
-  // One retry: a single slow/failed request to the PHP backend shouldn't silently
-  // drop an entire content type (hotels, activities, ...) from the sitemap.
-  for (let attempt = 0; attempt < 2; attempt++) {
+  // Retries with a short backoff: the PHP backend can briefly struggle when this
+  // route's several fetches (and whatever else is being built at the same time)
+  // hit it concurrently, and a single slow/failed request shouldn't silently drop
+  // an entire content type (hotels, activities, ...) from the sitemap.
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await sleep(500 * attempt);
     try {
       const res = await fetch(url, { next: { revalidate: 3600 } });
       if (res.ok) return await res.json();
+      lastError = `HTTP ${res.status}`;
     } catch (err) {
-      if (attempt === 1) console.error('sitemap: fetch failed for', url, err);
+      lastError = err;
     }
   }
+  console.error('sitemap: fetch failed for', url, lastError);
   return null;
 }
 
@@ -93,6 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     safeJson(`${API_BASE_URL}/offers.php`),
     safeJson(`${API_BASE_URL}/blogs.php?limit=200`),
   ]);
+
 
   const packageRoutes: MetadataRoute.Sitemap = (packagesRes?.data || [])
     .filter((p: { slug?: string }) => p.slug)
