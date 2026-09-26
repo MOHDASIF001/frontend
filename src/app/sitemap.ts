@@ -1,6 +1,13 @@
 import type { MetadataRoute } from 'next';
 import { API_BASE_URL } from '../config';
 
+// Without this, Next.js has no revalidate window of its own for this route and can
+// end up serving a single build-time snapshot indefinitely - if the backend was
+// briefly slow/unresponsive for even one of the several fetches below during that
+// one build, whole categories of URLs silently vanish from the sitemap until the
+// next deploy. Revalidating hourly means a transient backend hiccup self-heals.
+export const revalidate = 3600;
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
 
 // Mirrors the region slugs defined in src/app/holidays/[destination]/page.tsx.
@@ -23,14 +30,17 @@ const REGION_SLUGS = [
 const GROUP_TOUR_SLUGS = ['kashmir', 'ladakh', 'himachal', 'kerala', 'goa', 'rajasthan', 'dubai'];
 
 async function safeJson(url: string) {
-  try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (err) {
-    console.error('sitemap: fetch failed for', url, err);
-    return null;
+  // One retry: a single slow/failed request to the PHP backend shouldn't silently
+  // drop an entire content type (hotels, activities, ...) from the sitemap.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, { next: { revalidate: 3600 } });
+      if (res.ok) return await res.json();
+    } catch (err) {
+      if (attempt === 1) console.error('sitemap: fetch failed for', url, err);
+    }
   }
+  return null;
 }
 
 function slugifyCity(location?: string | null): string {
