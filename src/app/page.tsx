@@ -6,7 +6,6 @@ import HomeBlogSection from '../components/HomeBlogSection';
 import HomeMostPopularPackages from '../components/HomeMostPopularPackages';
 import { ExploreWorldSection } from '../components/explore-world/ExploreWorldSection';
 import HomeDestinationSlider from '../components/HomeDestinationSlider';
-import HomeReviewSlider from '../components/HomeReviewSlider';
 import HomeSeoContent from '../components/HomeSeoContent';
 import OpenModalButton from '../components/OpenModalButton';
 import { API_BASE_URL } from '../config';
@@ -14,6 +13,9 @@ import { API_BASE_URL } from '../config';
 export const revalidate = 60;
 
 export async function generateMetadata() {
+  // Canonical points every homepage variant (http, www, trailing query params) at one
+  // URL, which is also what the site's own www -> non-www redirect resolves to.
+  const alternates = { canonical: '/' };
   try {
     const res = await fetch(`${API_BASE_URL}/seo.php?page=index.php`, { next: { revalidate: 60 } });
     if (!res.ok) throw new Error();
@@ -22,11 +24,13 @@ export async function generateMetadata() {
       title: data.meta_title,
       description: data.meta_description,
       keywords: data.meta_keywords,
+      alternates,
     };
   } catch (err) {
     return {
       title: "Twin Brothers Holidays - Travel Kashmir",
       description: "Book Jammu & Kashmir tour packages, hotels, cabs, and adventure activities.",
+      alternates,
     };
   }
 }
@@ -86,6 +90,12 @@ export default async function HomePage() {
 
   return (
     <div className="overflow-x-hidden">
+      {/* Real (crawlable) page heading — the large "Explore World" graphic below is a
+          decorative section heading, not a page title, so it can't serve as the H1. */}
+      <h1 className="sr-only">
+        Kashmir &amp; India Holiday Packages, Hotels, Cabs and Activities | Twin Brothers Holidays
+      </h1>
+
       {/* Quick Access Dashboard */}
       <QuickAccessBanner />
 
@@ -117,7 +127,7 @@ export default async function HomePage() {
                   <i className="fa-solid fa-wallet me-2"></i>
                   Competitive pricing offers
                 </h6>
-                <Link href="/about-us" className="about-us-button text-decoration-none d-inline-block text-center mt-3">
+                <Link href="/about-us" aria-label="Read more about Twin Brothers Holidays" className="about-us-button text-decoration-none d-inline-block text-center mt-3">
                   Read More
                 </Link>
               </div>
@@ -163,7 +173,7 @@ export default async function HomePage() {
                     <p>Trusted by 24,000+ users</p>
                   </div>
                 </div>
-                <Link href="/about-us" className="why-choose-button text-decoration-none d-inline-block text-center mt-3">
+                <Link href="/about-us" aria-label="Find out more about why to choose Twin Brothers Holidays" className="why-choose-button text-decoration-none d-inline-block text-center mt-3">
                   Find Out More
                 </Link>
               </div>
@@ -193,9 +203,6 @@ export default async function HomePage() {
           </OpenModalButton>
         </div>
       </div>
-
-      {/* Testimonials Review Section */}
-      <HomeReviewSlider />
 
       {/* SEO Content Section (home page only, shown just above the footer) */}
       <HomeSeoContent />

@@ -16,6 +16,9 @@ function listPublicImages(dir: string, prefix = "images"): string[] {
 }
 
 const nextConfig: NextConfig = {
+  // Stop leaking "X-Powered-By: Next.js" on every response (flagged by SEO/security audits).
+  poweredByHeader: false,
+
   env: {
     NEXT_PUBLIC_LOCAL_IMAGES: JSON.stringify(
       listPublicImages(path.join(process.cwd(), "public", "images")),

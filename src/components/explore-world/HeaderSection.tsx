@@ -40,13 +40,13 @@ export const HeaderSection: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. MAIN HEADING */}
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none mb-1 sm:mb-2">
+      {/* 2. MAIN HEADING (decorative section heading, not the page's H1 — see sr-only H1 on the homepage) */}
+      <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none mb-1 sm:mb-2">
         <span className="text-white mr-2 md:mr-3">Explore</span>
         <span className="text-[#FF6500] inline-flex items-center">
           W<GlobeLetterO color="#FF6500" />rld
         </span>
-      </h1>
+      </h2>
 
       {/* 3. LOCATION DIVIDER */}
       <div className="flex items-center justify-center gap-2 my-0 sm:my-3 w-full max-w-[260px] sm:max-w-[320px]">

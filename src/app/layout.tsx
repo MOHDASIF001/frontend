@@ -5,7 +5,10 @@ import Footer from "../components/Footer";
 import InquiryModals from "../components/InquiryModals";
 import { ModalProvider } from "../context/ModalContext";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://twinbholidays.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Twin Brothers Holidays - Travel Kashmir",
   description: "Book Jammu & Kashmir tour packages, hotels, cabs, and adventure activities.",
   keywords: "Kashmir, Srinagar, Gulmarg, Pahalgam, Tour Packages, Hotel Booking, Cabs",
@@ -14,6 +17,7 @@ export const metadata: Metadata = {
   // when its native binary didn't install cleanly there).
   icons: {
     icon: "/images/fav-icon-logo.jpeg",
+    apple: "/images/fav-icon-logo.jpeg",
   },
 };
 
