@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid';
 import PackageDetailView from '../../../components/PackageDetailView';
 import DestinationsExplorer from '../../../components/DestinationsExplorer';
@@ -54,12 +55,27 @@ export async function generateMetadata({ params }: { params: Promise<{ destinati
   const destSlug = resolveDestinationSlug(destination);
   const guide = getDestinationGuide(destSlug);
   if (!guide) {
-    // Individual package pages (/holidays/{package-slug}) get their own SEO from the admin panel.
-    if (!destinationMeta[destSlug]) {
+    const meta = destinationMeta[destSlug];
+    if (!meta) {
+      // Individual package pages (/holidays/{package-slug}) get their own SEO from the admin panel.
       const pkg = await getPackageBySlug(destination);
       if (pkg) return buildPackageMetadata(pkg);
+      return {};
     }
-    return {};
+    // A known destination with no full write-up yet (e.g. Kashmir, Goa) still needs its
+    // own title/description/canonical - without this every one of these pages fell back
+    // to the homepage's generic metadata, which is what Search Console was flagging as
+    // duplicate content with no canonical chosen.
+    const url = `${siteUrl}/holidays/${destSlug}`;
+    const title = `${meta.label} Holiday Packages | Twin Brothers Holidays`;
+    const description = `Explore ${meta.label} holiday packages with Twin Brothers Holidays - handpicked stays, local transport and sightseeing in one itinerary, with transparent pricing and no surprises.`;
+    return {
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
+      twitter: { card: 'summary', title, description },
+    };
   }
   const url = `${siteUrl}/holidays/${guide.slug}`;
   return {
@@ -165,16 +181,10 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
     if (pkg) {
       return <PackageDetailView pkg={pkg} />;
     }
-    return (
-      <div className="bg-[#f8fafc] min-h-screen">
-        <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '120px', paddingBottom: '80px' }}>
-          <p className="text-slate-500 font-semibold">This page could not be found.</p>
-          <Link href="/holidays" className="mt-3 inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
-            Browse all holiday packages
-          </Link>
-        </div>
-      </div>
-    );
+    // A genuinely unknown destination/category/package slug - respond with a real
+    // 404 status (Google was flagging this as a "soft 404": a 200 response whose
+    // body just says "not found", which search engines penalize and won't index).
+    notFound();
   }
 
   const destinationName = meta.label;

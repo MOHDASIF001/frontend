@@ -33,6 +33,8 @@ interface PageProps {
   searchParams: Promise<{ drop?: string }>;
 }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
+
 export async function generateMetadata({ params, searchParams }: PageProps) {
   const { location } = await params;
   const { drop } = await searchParams;
@@ -41,16 +43,22 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
     return { title: 'Cab Service Not Found - Twin Brothers Holidays' };
   }
   const dropLoc = drop ? await getLocation(drop) : null;
+  // The "drop" query param is a separate filter view of the same page, not a distinct
+  // piece of content - canonicalize every variant to the plain location URL so Google
+  // doesn't treat each drop-location combination as its own duplicate page.
+  const url = `${siteUrl}/cabs/${location}`;
 
   if (dropLoc) {
     return {
       title: `${loc.name} to ${dropLoc.name} Cab Booking | Twin Brothers Holidays`,
       description: `Book a reliable cab from ${loc.name} to ${dropLoc.name}. Compare hatchbacks, sedans and SUVs, and get instant confirmation with Twin Brothers Holidays.`,
+      alternates: { canonical: url },
     };
   }
   return {
     title: `${loc.name} Cab Booking - Book Taxi Service in ${loc.name} | Twin Brothers Holidays`,
     description: `Book a reliable cab in ${loc.name}, ${loc.subtitle}. Compare hatchbacks, sedans and SUVs, and get instant confirmation with Twin Brothers Holidays.`,
+    alternates: { canonical: url },
   };
 }
 

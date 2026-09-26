@@ -5,8 +5,9 @@ import TourGallerySlider from '../../components/TourGallerySlider';
 import TourItineraryAccordion from '../../components/TourItineraryAccordion';
 import TourBookingSection from '../../components/TourBookingSection';
 import HomePackageSlider from '../../components/HomePackageSlider';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, resolveAssetUrl } from '../../config';
 import { buildPackageMetadata } from '../../lib/packageSeo';
+import { buildPackageSchema } from '../../lib/schema';
 
 export const revalidate = 60;
 
@@ -109,8 +110,14 @@ export default async function TourDetailsPage({ searchParams }: PageProps) {
   // Random reviews count
   const reviewsCount = 20 + (parseInt(pkg.id) * 7) % 130;
 
+  const packageSchema = buildPackageSchema({
+    ...pkg,
+    image: featured ? resolveAssetUrl(featured) : undefined,
+  });
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(packageSchema) }} />
       {/* Hero Section */}
       <div className="container-fluid tour-dtls-pg-hero-main-div">
         <div className="container">

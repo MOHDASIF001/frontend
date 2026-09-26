@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 import CopyCodeButton from '../../../components/CopyCodeButton';
 
@@ -41,15 +42,24 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
+
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const offer = await getOffer(slug);
   if (!offer) {
     return { title: 'Offer Not Found - Twin Brothers Holidays' };
   }
+  const title = offer.meta_title || `${offer.title} - Twin Brothers Holidays`;
+  const description = offer.meta_description || offer.subtitle;
+  const url = `${siteUrl}/offers/${slug}`;
+  const image = offer.image ? resolveAssetUrl(offer.image) : undefined;
   return {
-    title: offer.meta_title || `${offer.title} - Twin Brothers Holidays`,
-    description: offer.meta_description || offer.subtitle,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website', images: image ? [{ url: image, alt: offer.image_alt || offer.title }] : undefined },
+    twitter: { card: image ? 'summary_large_image' : 'summary', title, description, images: image ? [image] : undefined },
   };
 }
 
@@ -76,16 +86,7 @@ export default async function OfferDetailPage({ params }: PageProps) {
   const offer = await getOffer(slug);
 
   if (!offer) {
-    return (
-      <div className="bg-[#f8fafc] min-h-screen">
-        <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '120px', paddingBottom: '80px' }}>
-          <p className="text-slate-500 font-semibold">This offer could not be found — it may have expired or been removed.</p>
-          <Link href="/" className="mt-3 inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
-            Back to Home
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   const img = offer.image ? resolveAssetUrl(offer.image) : '/images/default-dest.jpg';

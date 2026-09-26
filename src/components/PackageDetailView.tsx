@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useModals } from '../context/ModalContext';
 import { resolveAssetUrl } from '../config';
+import { buildPackageSchema, buildBreadcrumbSchema } from '../lib/schema';
 
 interface ItineraryDay {
   title?: string;
@@ -97,8 +98,17 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
     });
   };
 
+  const packageSchema = buildPackageSchema({ ...pkg, image: featuredSrc || undefined });
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Holidays', path: '/holidays' },
+    { name: pkg.title, path: `/holidays/${pkg.slug}` },
+  ]);
+
   return (
     <div className="bg-[#f8fafc] min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(packageSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="max-w-[1140px] mx-auto px-1.5 sm:px-6 lg:px-8" style={{ paddingTop: `${navbarHeight + 10}px`, paddingBottom: '60px' }}>
         {/* Breadcrumb */}
         <p className="text-sm font-semibold text-slate-500 mb-[6px]">

@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { API_BASE_URL, resolveAssetUrl } from '../../../config';
 import BlogShareBar from '../../../components/BlogShareBar';
 import PackageCard, { PackageCardData } from '../../../components/PackageCard';
+import { buildBlogPostingSchema } from '../../../lib/schema';
 
 export const revalidate = 60;
 
@@ -93,19 +95,27 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
+
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const { post } = await getBlogPost(slug);
   if (!post) {
     return { title: 'Article Not Found - Twin Brothers Holidays' };
   }
+  const title = post.meta_title || `${post.title} - Twin Brothers Holidays Blog`;
+  const description = post.meta_description || post.excerpt;
+  const url = `${siteUrl}/blog/${slug}`;
   return {
-    title: post.meta_title || `${post.title} - Twin Brothers Holidays Blog`,
-    description: post.meta_description || post.excerpt,
+    title,
+    description,
+    alternates: { canonical: url },
     openGraph: {
       title: post.meta_title || post.title,
       description: post.meta_description || post.excerpt,
-      images: post.featured_image ? [resolveAssetUrl(post.featured_image)] : undefined,
+      url,
+      siteName: 'Twin Brothers Holidays',
+      images: post.featured_image ? [{ url: resolveAssetUrl(post.featured_image), alt: post.featured_image_alt || post.title }] : undefined,
       type: 'article',
     },
   };
@@ -117,27 +127,28 @@ export default async function BlogDetailPage({ params }: PageProps) {
   const relatedPackages = post ? await getRelatedPackages(post.category) : [];
 
   if (!post) {
-    return (
-      <div className="bg-[#f8fafc] min-h-screen">
-        <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '140px', paddingBottom: '80px' }}>
-          <i className="fa-regular fa-newspaper" style={{ fontSize: '40px', color: '#cbd5e1' }}></i>
-          <p className="text-slate-500 font-semibold mt-4">This article could not be found — it may have been unpublished.</p>
-          <Link href="/blog" className="mt-3 inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
-            Back to Blog
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
-
   const img = post.featured_image ? resolveAssetUrl(post.featured_image) : '/images/default-package.jpg';
   const tags = (post.tags || '')
     .split(',')
     .map((t) => t.trim())
     .filter(Boolean);
 
+  const blogSchema = buildBlogPostingSchema({
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    content: post.content,
+    image: img,
+    imageAlt: post.featured_image_alt,
+    authorName: post.author_name,
+    publishDate: post.publish_date,
+  });
+
   return (
     <div className="overflow-x-hidden bg-white min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }} />
       {/* Hero */}
       <div className="relative w-full">
         <div className="relative w-full h-[280px] sm:h-[420px] overflow-hidden">

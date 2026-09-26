@@ -1,10 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid';
 import { majorDestinations } from '../../../lib/majorDestinations';
 import { API_BASE_URL } from '../../../config';
 
 export const revalidate = 60;
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
+
+export async function generateMetadata({ params }: PageProps) {
+  const { destination: rawSegment } = await params;
+  const slug = rawSegment.replace(/-group-tour-packages$/, '');
+  const meta = majorDestinations.find((d) => d.slug === slug);
+  if (!meta) return {};
+  const url = `${siteUrl}/group-tours/${meta.slug}`;
+  const title = `${meta.label} Group Tour Packages | Twin Brothers Holidays`;
+  const description = `Fixed-departure ${meta.label} group tour packages with Twin Brothers Holidays - handpicked groups, all sightseeing covered and a dedicated tour manager throughout.`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
+    twitter: { card: 'summary', title, description },
+  };
+}
 
 interface Package {
   id: number;
@@ -48,16 +68,7 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
   const meta = majorDestinations.find((d) => d.slug === slug);
 
   if (!meta) {
-    return (
-      <div className="bg-[#f8fafc] min-h-screen">
-        <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 text-center" style={{ paddingTop: '120px', paddingBottom: '80px' }}>
-          <p className="text-slate-500 font-semibold">This page could not be found.</p>
-          <Link href="/group-tours" className="mt-3 inline-block font-bold hover:underline" style={{ color: '#094074', textDecoration: 'none' }}>
-            Browse all group tour packages
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   const destinationName = meta.label;

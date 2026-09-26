@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import InquiryModals from "../components/InquiryModals";
 import { ModalProvider } from "../context/ModalContext";
+import { fetchSiteSettings } from "../lib/siteSettings";
+import { buildOrganizationSchema } from "../lib/organizationSchema";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://twinbholidays.com";
 
@@ -21,14 +24,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Admin Panel -> Settings -> "SEO & Integrations" controls GTM/GA and the
+  // Organization schema below - sitewide, without touching code.
+  const settings = await fetchSiteSettings();
+  const gtmId = settings.gtm_container_id.trim();
+  const ga4Id = settings.ga4_measurement_id.trim();
+  const organizationSchema = buildOrganizationSchema(settings);
+
   return (
     <html lang="en" className="h-full">
       <head>
+        {gtmId && (
+          <Script id="gtm-head" strategy="afterInteractive">
+            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`}
+          </Script>
+        )}
+        {ga4Id && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} strategy="afterInteractive" />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4Id}');`}
+            </Script>
+          </>
+        )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+
         {/* Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -63,6 +91,16 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
+        {gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
         <ModalProvider>
           <Navbar />
           <div className="flex-1 flex flex-col">
