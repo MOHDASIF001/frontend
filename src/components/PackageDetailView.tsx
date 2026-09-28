@@ -206,15 +206,21 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
             {/* Content */}
             <div className="bg-white border border-slate-150 rounded-xl p-2 sm:p-5">
               <h3 id="pkg-overview" className="font-black text-slate-900 mb-1.5 sm:mb-3" style={{ fontSize: '17px', scrollMarginTop: `${navbarHeight + 66}px` }}>Package Overview</h3>
-              <p className="text-slate-600" style={{ fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
-                {pkg.description || pkg.short_description || `Discover ${pkg.title} with Twin Brothers Holidays.`}
-              </p>
+              <div
+                className="blog-content text-slate-600"
+                style={{ fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}
+                dangerouslySetInnerHTML={{
+                  __html: pkg.description || pkg.short_description || `Discover ${pkg.title} with Twin Brothers Holidays.`,
+                }}
+              />
               {pkg.what_to_expect && (
                 <>
                   <h3 className="font-black text-slate-900 mt-3 mb-1.5 sm:mt-6 sm:mb-3" style={{ fontSize: '17px' }}>What to Expect</h3>
-                  <p className="text-slate-600" style={{ fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}>
-                    {pkg.what_to_expect}
-                  </p>
+                  <div
+                    className="blog-content text-slate-600"
+                    style={{ fontSize: '14px', lineHeight: '1.8', whiteSpace: 'pre-line' }}
+                    dangerouslySetInnerHTML={{ __html: pkg.what_to_expect }}
+                  />
                 </>
               )}
 
