@@ -28,6 +28,7 @@ interface PackageData {
   exclusions?: string;
   cancellation_policy?: string;
   itinerary?: ItineraryDay[] | string;
+  internal_links?: { label?: string; url?: string }[];
   featured_image: string;
   featured_image_alt?: string;
   gallery?: string[];
@@ -87,6 +88,10 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
   } else if (typeof pkg.itinerary === 'string' && pkg.itinerary.trim()) {
     itineraryDays = [{ title: 'Itinerary', description: pkg.itinerary }];
   }
+
+  const internalLinks = (pkg.internal_links || []).filter(
+    (link): link is { label: string; url: string } => Boolean(link.label && link.url)
+  );
 
   const handleEnquire = () => {
     openModal('tour_booking', {
@@ -310,6 +315,33 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
               <p className="text-slate-600 mb-2" style={{ fontSize: '13px', lineHeight: '1.7', whiteSpace: 'pre-line' }}>
                 {pkg.cancellation_policy || 'Please contact our team for detailed booking and cancellation terms for this package.'}
               </p>
+
+              {/* Explore More (admin-controlled internal links) */}
+              {internalLinks.length > 0 && (
+                <>
+                  <h4 className="font-black text-slate-900 mt-3 mb-1.5 sm:mt-6 sm:mb-3" style={{ fontSize: '15px' }}>Explore More</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {internalLinks.map((link, idx) => (
+                      <Link
+                        key={idx}
+                        href={link.url!}
+                        className="font-bold inline-flex items-center gap-1.5"
+                        style={{
+                          fontSize: '12.5px',
+                          color: '#094074',
+                          background: '#eaf1f8',
+                          borderRadius: '999px',
+                          padding: '8px 14px',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        {link.label}
+                        <i className="fa-solid fa-arrow-right" style={{ fontSize: '10px', color: '#ff8126' }}></i>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

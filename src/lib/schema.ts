@@ -112,6 +112,23 @@ export function buildHotelSchema(hotel: HotelSchemaSource) {
   return schema;
 }
 
+export interface FaqSchemaSource {
+  question: string;
+  answer: string;
+}
+
+export function buildFaqSchema(faqs: FaqSchemaSource[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  };
+}
+
 export interface BlogSchemaSource {
   title: string;
   slug?: string;

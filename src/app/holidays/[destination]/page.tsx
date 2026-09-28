@@ -6,10 +6,12 @@ import PackageDetailView from '../../../components/PackageDetailView';
 import DestinationsExplorer from '../../../components/DestinationsExplorer';
 import DestinationSeoSection from '../../../components/DestinationSeoSection';
 import DestinationGuide from '../../../components/DestinationGuide';
+import FaqSection from '../../../components/FaqSection';
 import { API_BASE_URL } from '../../../config';
 import { Category, slugifyCategory } from '../../../lib/categories';
 import { getDestinationGuide } from '../../../lib/destinationGuides';
 import { buildPackageMetadata } from '../../../lib/packageSeo';
+import { fetchPackageFaqs } from '../../../lib/faqs';
 
 export const revalidate = 60;
 
@@ -179,7 +181,13 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
   if (!meta) {
     const pkg = await getPackageBySlug(rawSegment);
     if (pkg) {
-      return <PackageDetailView pkg={pkg} />;
+      const packageFaqs = await fetchPackageFaqs(pkg.id);
+      return (
+        <>
+          <PackageDetailView pkg={pkg} />
+          <FaqSection faqs={packageFaqs} />
+        </>
+      );
     }
     // A genuinely unknown destination/category/package slug - respond with a real
     // 404 status (Google was flagging this as a "soft 404": a 200 response whose

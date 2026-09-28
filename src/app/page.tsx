@@ -7,9 +7,11 @@ import HomeMostPopularPackages from '../components/HomeMostPopularPackages';
 import { ExploreWorldSection } from '../components/explore-world/ExploreWorldSection';
 import HomeDestinationSlider from '../components/HomeDestinationSlider';
 import HomeSeoContent from '../components/HomeSeoContent';
+import FaqSection from '../components/FaqSection';
 import OpenModalButton from '../components/OpenModalButton';
 import { API_BASE_URL } from '../config';
 import { fetchPromoSlides } from '../lib/promoSlides';
+import { fetchHomeFaqs } from '../lib/faqs';
 
 export const revalidate = 60;
 
@@ -83,11 +85,12 @@ async function getDestinations() {
   }
 }
 export default async function HomePage() {
-  const [destinations, popularPackages, blogPosts, promoSlides] = await Promise.all([
+  const [destinations, popularPackages, blogPosts, promoSlides, homeFaqs] = await Promise.all([
     getDestinations(),
     getPopularPackages(),
     getBlogPosts(),
     fetchPromoSlides('home'),
+    fetchHomeFaqs(),
   ]);
 
   return (
@@ -205,6 +208,9 @@ export default async function HomePage() {
           </OpenModalButton>
         </div>
       </div>
+
+      {/* FAQs (admin-controlled via Admin Panel → FAQs), shown just above the footer */}
+      <FaqSection faqs={homeFaqs} />
 
       {/* SEO Content Section (home page only, shown just above the footer) */}
       <HomeSeoContent />
