@@ -120,9 +120,12 @@ export default async function HomePage() {
             <div className="col-lg-7">
               <div className="about-us-text-div">
                 <p className="about-us">About Us</p>
-                <h3>The Story Behind Our Journeys</h3>
+                <h3>Your Trusted Travel Partner</h3>
                 <p className="about-para">
-                  Twin Brothers Holidays has been the premier choice for travelers looking to experience the magic of Jammu and Kashmir. From bespoke family tours to adventurous treks, our focus is on creating memories that last a lifetime.
+                  Twin Brothers Holidays is an organization that designs tour packages and holidays for families, couples, honeymooners, groups, solo travelers, and religious wanderers. We offer a wide range of travel services and organize trips for those who want to enjoy the beauty of the world around them, have new experiences, and have a comfortable, unforgettable, and affordable adventure.
+                </p>
+                <p className="about-para">
+                  Our company offers a variety of itineraries from mountain climbing and visiting valleys to visiting cultural, spiritual, and adventurous places. We provide unique travel packages developed according to the client&apos;s preferences, interests, and budget.
                 </p>
                 <h6>
                   <i className="fa-solid fa-person-walking-luggage me-2"></i>
@@ -158,20 +161,20 @@ export default async function HomePage() {
               <div className="why-choose-text-main-div">
                 <h3>Why Choose Us</h3>
                 <p className="why-choose-pera">
-                  We specialize in crafting customized itineraries that cater to your unique interests and preferences. We take care of every detail so you can focus on creating unforgettable memories.
+                  Our amenities are developed around the interests and needs of our clients. Excursions, accommodation, and routes are organized and implemented by local staff, and trips can be customized for honeymooners, families, solo travelers, groups of friends, and much more.
                 </p>
                 <div className="why-coose-points-div">
                   <div className="points-choose">
                     <i className="fa-solid fa-mountain-sun"></i>
-                    <p>Every place and activity is thoughtfully selected by our team</p>
+                    <p>Tours and activities designed around your interests and needs</p>
                   </div>
                   <div className="points-choose">
                     <i className="fa-solid fa-route"></i>
-                    <p>We provide different types of tour plans</p>
+                    <p>Local staff manage accommodation, excursions, and routes</p>
                   </div>
                   <div className="points-choose">
                     <i className="fa-solid fa-book-open-reader"></i>
-                    <p>Easy booking system</p>
+                    <p>Customized trips for honeymooners, families, solo travelers, and groups</p>
                   </div>
                   <div className="points-choose">
                     <i className="fa-solid fa-hand-holding-heart"></i>

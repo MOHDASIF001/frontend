@@ -17,18 +17,17 @@ export default function HomeSeoContent() {
         </h2>
 
         <p className="text-slate-600 font-medium" style={{ fontSize: '14px', lineHeight: '1.9' }}>
-          Twin Brothers Holidays helps travellers plan trips across India and beyond — with some of our
-          most detailed, ground-level coverage in Jammu &amp; Kashmir, from Dal Lake and the Mughal Gardens
-          in Srinagar to the snow-covered slopes of Gulmarg, the meadows of Pahalgam, and the glacier views
-          of Sonamarg. Whether you&apos;re booking a{' '}
+          Twin Brothers Holidays plans trips across India and beyond, with deep, ground-level expertise in
+          destinations like Dal Lake and the Mughal Gardens in Srinagar, Gulmarg&apos;s snow slopes,
+          Pahalgam&apos;s river valleys, and Sonamarg&apos;s glacier views. Book a{' '}
           <Link href="/holidays" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>holiday package</Link>,
-          {' '}looking for a{' '}
+          {' '}a{' '}
           <Link href="/hotel" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>hotel</Link>,
-          {' '}need a{' '}
+          {' '}a{' '}
           <Link href="/cabs" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>cab for local sightseeing or an airport transfer</Link>,
-          {' '}or want to add a{' '}
-          <Link href="/activities" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>local activity or experience</Link>,
-          {' '}we put it all together in one place.
+          {' '}or a{' '}
+          <Link href="/activities" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>local activity or experience</Link>
+          {' '}— all in one place.
         </p>
 
         <div
@@ -40,25 +39,22 @@ export default function HomeSeoContent() {
           }}
         >
           <p className="text-slate-600 font-medium" style={{ fontSize: '14px', lineHeight: '1.9', marginTop: '18px' }}>
-            Kashmir&apos;s tourist season runs almost all year — spring for Tulip Garden and blossoms,
-            summer for cool valley weather, autumn for the Chinar trees turning gold, and winter for
-            snowfall in Gulmarg and Pahalgam. Popular experiences include a houseboat stay and Shikara
-            ride on Dal Lake in Srinagar, the Gulmarg Gondola cable car ride to Kongdoori and Apharwat,
-            pony rides and river-side walks in Pahalgam, and the glacier trek near Thajiwas in Sonamarg.
-            Beyond Kashmir, we also plan trips to Leh Ladakh, Manali, Munnar, Goa and Dubai for travellers
-            looking to explore further afield.
+            Each destination has its own season: spring for the Tulip Garden, summer for cool valley
+            weather, autumn for Chinar trees turning gold, and winter for snowfall in the hills. Popular
+            experiences include a houseboat stay and Shikara ride on Dal Lake, the Gulmarg Gondola to
+            Kongdoori and Apharwat, pony rides in Pahalgam, and the glacier trek near Thajiwas in
+            Sonamarg. We also plan trips to Leh Ladakh, Manali, Munnar, Goa and Dubai.
           </p>
           <p className="text-slate-600 font-medium" style={{ fontSize: '14px', lineHeight: '1.9', marginTop: '14px' }}>
             Every{' '}
             <Link href="/holidays" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>holiday package</Link>
-            {' '}on our site can be filtered by destination, duration and category — honeymoon,
-            family, luxury, adventure, trekking, pilgrimage and more — and each package clearly lists
-            what&apos;s included, so there are no surprises at checkout. For a trip that doesn&apos;t
-            fit a ready-made package, use the{' '}
-            <span className="font-bold text-slate-800">Customize Package</span> button in the menu and
-            our team will build an itinerary around your dates, budget and group size. You can also{' '}
+            {' '}can be filtered by destination, duration and category — honeymoon, family, budget
+            group, luxury, adventure, trekking and pilgrimage tours — with inclusions listed upfront.
+            Need something different? Use the{' '}
+            <span className="font-bold text-slate-800">Customize Package</span> button to build your own
+            itinerary, or{' '}
             <Link href="/group-tours" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>join a fixed-departure group tour</Link>
-            {' '}if you&apos;d rather travel with a small group than plan everything yourself.
+            {' '}to travel with a small group instead of planning it yourself.
           </p>
         </div>
 
