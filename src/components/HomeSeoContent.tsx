@@ -13,7 +13,7 @@ export default function HomeSeoContent() {
           Travel Guide
         </span>
         <h2 className="font-black text-slate-900 mt-2 mb-4" style={{ fontSize: '22px', lineHeight: '1.35' }}>
-          Plan Your Next Trip With Twin Brothers Holidays
+          Plan Your Next Holiday Packages With Twin Brothers Holidays
         </h2>
 
         <p className="text-slate-600 font-medium" style={{ fontSize: '14px', lineHeight: '1.9' }}>
