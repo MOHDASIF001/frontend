@@ -48,12 +48,13 @@ export default function AboutUsPage() {
             ABOUT TWIN BROTHERS HOLIDAYS
           </span>
           <h1 className="font-black" style={{ fontSize: '30px', lineHeight: '1.25', maxWidth: '620px' }}>
-            Traveller-first, destination by destination — planning trips that feel effortless.
+            From Kashmir to the World — Journeys Made for You
           </h1>
           <p className="text-white/75 font-semibold mt-4" style={{ fontSize: '14px', lineHeight: '1.8', maxWidth: '580px' }}>
-            We&apos;re a travel company building holiday packages, hotel stays, cabs and local activities
-            across India and beyond — with deep, ground-level expertise in destinations like Kashmir, one
-            idea guiding all of it: you shouldn&apos;t need to be a local to travel like one.
+            At Twin Brothers Holidays, we believe every journey should be more than just a trip — it
+            should be an experience worth remembering. From the breathtaking valleys of Kashmir to the
+            vibrant destinations of India and the world, we create thoughtfully planned holiday packages,
+            customized tours and unforgettable travel experiences for every kind of traveller.
           </p>
 
           <div className="flex flex-wrap gap-2 mt-6">
@@ -102,11 +103,20 @@ export default function AboutUsPage() {
               Twin Brothers Holidays
             </h2>
             <p className="text-slate-600 font-medium" style={{ fontSize: '14px', lineHeight: '1.9' }}>
-              Discover the world with ease and inspiration through Twin Brothers Holidays, your guide to
-              unforgettable journeys and seamless travel experiences across India — with destinations from
-              Kashmir to Ladakh, Kerala, Goa and beyond. We specialize in tailored tour planning, cozy
-              accommodations, and reliable local transportation — so the only thing you have to plan is
-              what to pack.
+              Twin Brothers Holidays is a travel company creating memorable holiday experiences across
+              Kashmir, India, and international destinations. We offer customized tour packages, family
+              holidays, honeymoon trips, group tours, adventure travel, domestic holidays, and
+              international vacations designed around your interests, budget, and travel style.
+            </p>
+            <p className="text-slate-600 font-medium mt-3" style={{ fontSize: '14px', lineHeight: '1.9' }}>
+              From Kashmir tour packages and scenic sightseeing to carefully planned India and
+              international holidays, we bring together comfortable stays, transportation, airport
+              transfers, local experiences, and personalized itineraries to make every journey smooth and
+              enjoyable.
+            </p>
+            <p className="text-slate-600 font-medium mt-3" style={{ fontSize: '14px', lineHeight: '1.9' }}>
+              With Twin Brothers Holidays, every destination becomes an opportunity to explore, experience,
+              and create memories that last a lifetime.
             </p>
             <div className="flex flex-col gap-3 mt-6">
               {[
@@ -136,17 +146,17 @@ export default function AboutUsPage() {
             {
               title: 'Our Mission',
               icon: 'fa-bullseye',
-              text: 'To deliver exceptional travel services that guarantee maximum satisfaction, complete safety, and lifetime memories for every traveller, wherever in India (or beyond) they choose to go.',
+              text: 'To create seamless and memorable travel experiences through personalized tour packages, reliable services, comfortable stays, and genuine local experiences that make every journey enjoyable.',
             },
             {
               title: 'Our Vision',
               icon: 'fa-eye',
-              text: 'To be the most reliable, client-centric tour package curator across India, known for genuine, ground-level hospitality in every destination we serve.',
+              text: 'To become a trusted travel partner for Kashmir, India and international holidays, known for thoughtful planning, personalized experiences, dependable service, and exceptional hospitality.',
             },
             {
               title: 'Why Choose Us',
               icon: 'fa-star',
-              text: 'Deep local expertise, a well-maintained vehicle fleet, handpicked hotel partners, and a responsive team focused on flawless trip execution.',
+              text: 'From customized itineraries and trusted hotel partners to reliable transportation and local travel support, we bring together everything you need for a comfortable, smooth, and memorable journey.',
             },
           ].map((c) => (
             <div
