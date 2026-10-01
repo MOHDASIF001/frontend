@@ -71,7 +71,7 @@ export default function HomeDestinationSlider({ destinations }: HomeDestinationS
                 <SwiperSlide key={dest.id}>
                   <div className="card-destination-main-div">
                     <Link href={destHref}>
-                      <img src={img} alt={dest.image_alt || dest.name} />
+                      <img src={img} alt={dest.image_alt || dest.name} loading="lazy" />
                     </Link>
                     <div className="desti-overflow"></div>
                     <Link href={destHref}>

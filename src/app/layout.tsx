@@ -57,9 +57,14 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
 
-        {/* Google Fonts */}
+        {/* Resource hints: start DNS/TLS for third-party origins early so the
+            render-blocking CSS below (and client-side API calls) start
+            fetching sooner, without changing what loads or how it looks. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://backend.twinbholidays.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Alex+Brush&family=Caveat:wght@400;600;700&display=swap"
           rel="stylesheet"

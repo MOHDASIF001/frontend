@@ -65,6 +65,7 @@ export default function HomeBlogSection({ posts }: { posts: BlogCardData[] }) {
                 <img
                   src={post.featured_image ? resolveAssetUrl(post.featured_image) : '/images/default-package.jpg'}
                   alt={post.featured_image_alt || post.title}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {post.category && (
