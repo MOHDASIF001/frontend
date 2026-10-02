@@ -25,10 +25,14 @@ body {
 /* Belt-and-suspenders: nothing on this site should ever be horizontally
    scrollable — any element that briefly renders wider than the viewport
    (an unconstrained image before its CSS applies, an absolutely-positioned
-   control, etc.) should get clipped instead of shifting the whole page. */
+   control, etc.) should get clipped instead of shifting the whole page.
+   Uses `clip` rather than `hidden` - `overflow: hidden` on html/body turns
+   them into a scroll container, which per spec makes every `position:
+   sticky` descendant on the site stick to nothing (it never actually
+   stuck). `clip` clips the same way without that side effect. */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 

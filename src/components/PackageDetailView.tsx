@@ -353,7 +353,7 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
 
           {/* Right sidebar */}
           <div className="w-full lg:w-[340px] flex-shrink-0">
-            <div className="lg:sticky" style={{ top: '96px' }}>
+            <div className="lg:sticky" style={{ top: `${navbarHeight + 16}px` }}>
               <div className="rounded-xl overflow-hidden mb-4" style={{ background: '#eaf1f8' }}>
                 <div className="p-4">
                   <p className="text-slate-500 font-semibold mb-1" style={{ fontSize: '13px' }}>Starting from</p>
