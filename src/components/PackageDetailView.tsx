@@ -115,8 +115,9 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(packageSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <div className="max-w-[1140px] mx-auto px-1.5 sm:px-6 lg:px-8" style={{ paddingTop: `${navbarHeight + 10}px`, paddingBottom: '60px' }}>
-        {/* Breadcrumb */}
-        <p className="text-sm font-semibold text-slate-500 mb-[6px]">
+        {/* Breadcrumb (hidden on mobile - wraps to 2 lines and crowds the title there;
+            the BreadcrumbList schema above still gives search engines the same info) */}
+        <p className="hidden sm:block text-sm font-semibold text-slate-500 mb-[6px]">
           <Link href="/" className="hover:underline" style={{ textDecoration: 'none', color: '#64748b' }}>Home</Link>
           <span className="mx-1.5">&gt;</span>
           <Link href="/holidays" className="hover:underline" style={{ textDecoration: 'none', color: '#64748b' }}>Holidays</Link>
