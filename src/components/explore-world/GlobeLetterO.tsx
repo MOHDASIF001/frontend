@@ -14,6 +14,7 @@ export const GlobeLetterO: React.FC<GlobeLetterOProps> = ({
   return (
     <span
       className={`inline-flex items-center justify-center align-baseline relative mx-[0.02em] ${className}`}
+      role="img"
       aria-label="O with globe"
     >
       <svg

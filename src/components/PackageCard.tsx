@@ -171,6 +171,7 @@ export default function PackageCard({ pkg, layout = 'row' }: { pkg: PackageCardD
           <div className="flex items-center gap-2">
             <a
               href="tel:+916005242675"
+              aria-label="Call us"
               className="flex items-center justify-center flex-shrink-0"
               style={{ width: '48px', height: '42px', borderRadius: '7px', border: '1.5px solid #ff8126', color: '#ff8126', textDecoration: 'none' }}
             >

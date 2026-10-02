@@ -57,14 +57,14 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
 
-        {/* Resource hints: start DNS/TLS for third-party origins early so the
-            render-blocking CSS below (and client-side API calls) start
-            fetching sooner, without changing what loads or how it looks. */}
+        {/* Resource hints: start DNS/TLS for the origins behind the
+            render-blocking CSS below early. Kept to 4 - PageSpeed Insights
+            specifically warns that more than that stops helping (each one
+            competes for bandwidth with the page's own critical requests). */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://backend.twinbholidays.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&family=Alex+Brush&family=Caveat:wght@400;600;700&display=swap"
           rel="stylesheet"
@@ -108,9 +108,9 @@ export default async function RootLayout({
         )}
         <ModalProvider>
           <Navbar />
-          <div className="flex-1 flex flex-col">
+          <main className="flex-1 flex flex-col">
             {children}
-          </div>
+          </main>
           <Footer />
           <InquiryModals />
         </ModalProvider>
