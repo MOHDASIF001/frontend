@@ -4,6 +4,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import Link from 'next/link';
+import Image from 'next/image';
 import { REGION_SLUG_MAP } from '../lib/destinationRegions';
 import { resolveAssetUrl } from '../config';
 
@@ -71,7 +72,14 @@ export default function HomeDestinationSlider({ destinations }: HomeDestinationS
                 <SwiperSlide key={dest.id}>
                   <div className="card-destination-main-div">
                     <Link href={destHref}>
-                      <img src={img} alt={dest.image_alt || dest.name} loading="lazy" />
+                      <Image
+                        src={img}
+                        alt={dest.image_alt || dest.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 650px) 83vw, (max-width: 920px) 43vw, (max-width: 1224px) 30vw, 23vw"
+                        loading="lazy"
+                      />
                     </Link>
                     <div className="desti-overflow"></div>
                     <Link href={destHref}>

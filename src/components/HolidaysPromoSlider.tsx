@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import type { Swiper as SwiperType } from 'swiper';
+import Image from 'next/image';
 import { API_BASE_URL, resolveAssetUrl } from '../config';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -88,17 +89,38 @@ export default function HolidaysPromoSlider({ position = 'packages', initialProm
           style={{ borderRadius: '11px' }}
         >
           {promos.map((promo, idx) => {
-            const picture = (
-              <picture className="block w-full h-full">
-                {promo.imageMobile && <source media="(max-width: 639px)" srcSet={promo.imageMobile} />}
-                <img
+            const priorityProps = idx === 0 ? { priority: true as const } : { loading: 'lazy' as const };
+            // Same art-direction as before (separate mobile vs desktop crop, swapped at the
+            // same 640px breakpoint) but via next/image so each gets its own right-sized,
+            // modern-format file instead of the admin's full-resolution upload.
+            const picture = promo.imageMobile ? (
+              <>
+                <Image
+                  src={promo.imageMobile}
+                  alt={promo.image_alt || promo.title}
+                  fill
+                  className="object-cover sm:hidden"
+                  sizes="100vw"
+                  {...priorityProps}
+                />
+                <Image
                   src={promo.image}
                   alt={promo.image_alt || promo.title}
-                  className="w-full h-full object-cover"
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                  fill
+                  className="object-cover hidden sm:block"
+                  sizes="(max-width: 1140px) 100vw, 1140px"
+                  {...priorityProps}
                 />
-              </picture>
+              </>
+            ) : (
+              <Image
+                src={promo.image}
+                alt={promo.image_alt || promo.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1140px) 100vw, 1140px"
+                {...priorityProps}
+              />
             );
             return (
               <SwiperSlide key={`${promo.title}-${idx}`}>

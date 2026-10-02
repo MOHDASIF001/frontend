@@ -136,7 +136,7 @@ export default async function HomePage() {
                   Competitive pricing offers
                 </h6>
                 <Link href="/about-us" aria-label="Read more about Twin Brothers Holidays" className="about-us-button text-decoration-none d-inline-block text-center mt-3">
-                  Read More
+                  Read Our Story
                 </Link>
               </div>
             </div>

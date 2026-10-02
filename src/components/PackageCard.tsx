@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useModals } from '../context/ModalContext';
 import { resolveAssetUrl } from '../config';
 
@@ -55,7 +56,13 @@ export default function PackageCard({ pkg, layout = 'row' }: { pkg: PackageCardD
     >
       <Link href={`/holidays/${pkg.slug}/`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1.875 / 1', borderRadius: '8px' }}>
-          <img src={img} alt={pkg.featured_image_alt || pkg.title} className="w-full h-full object-cover" />
+          <Image
+            src={img}
+            alt={pkg.featured_image_alt || pkg.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+          />
           {hasDiscount && (
             <span
               className="absolute top-3 left-3 font-normal text-white rounded-md flex items-center gap-1.5"
