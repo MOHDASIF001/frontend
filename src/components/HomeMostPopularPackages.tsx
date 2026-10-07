@@ -52,7 +52,7 @@ export default function HomeMostPopularPackages({ packages }: { packages: Packag
               Trending Now
             </span>
             <h2 className="popular-pkgs-heading font-black text-slate-900">
-              Most Popular{' '}
+              Best Vacation Trip{' '}
               <span
                 style={{
                   background: 'linear-gradient(90deg, #ff8126, #fd661e)',
