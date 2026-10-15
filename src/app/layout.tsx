@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Twin Brothers Holidays - Travel Kashmir",
   description: "Book Jammu & Kashmir tour packages, hotels, cabs, and adventure activities.",
+  authors: [{ name: "Twin Brothers Holidays", url: siteUrl }],
+  creator: "Twin Brothers Holidays",
+  publisher: "Twin Brothers Holidays",
+  robots: { index: true, follow: true },
   // Served as-is from /public - no build-time image processing (the app/icon.*
   // convention runs every favicon through `sharp`, which hung Vercel's build
   // when its native binary didn't install cleanly there).
