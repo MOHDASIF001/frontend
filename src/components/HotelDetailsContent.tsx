@@ -28,7 +28,7 @@ interface Room {
   max_guests?: number;
 }
 
-interface HotelDetails {
+export interface HotelDetails {
   id: number;
   name: string;
   slug?: string;
@@ -45,16 +45,21 @@ interface HotelDetails {
   gallery_alt?: string[];
 }
 
-export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) {
+export function HotelDetailsContent({ initialId, initialHotel }: { initialId?: string; initialHotel?: HotelDetails } = {}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryId = searchParams.get('id');
   const id = queryId || initialId || null;
   const { openModal } = useModals();
 
-  const [hotel, setHotel] = useState<HotelDetails | null>(null);
+  // When the page already fetched this hotel server-side (the normal case - see
+  // hotels-details/[slug]/page.tsx), start from that data instead of null so the
+  // first HTML response already has the real name/photos/price/rooms instead of
+  // a spinner. Only the legacy `?id=` query-param path (no server data available
+  // for that case) still needs the client-side fetch below.
+  const [hotel, setHotel] = useState<HotelDetails | null>(initialHotel || null);
   const [similarHotels, setSimilarHotels] = useState<HotelDetails[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!initialHotel);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('rooms');
@@ -66,9 +71,15 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
   } | null>(null);
 
   useEffect(() => {
-    if (id) {
-      fetchHotelDetails(id);
+    if (!id) return;
+    if (initialHotel && String(initialHotel.id) === String(id)) {
+      // Already have this hotel's data from the server - just fetch the
+      // "Similar Properties" row, no need to re-fetch the hotel itself.
+      fetchSimilarHotels(id, initialHotel.location || '');
+      return;
     }
+    fetchHotelDetails(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -315,7 +326,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                       className="h-1/2 cursor-pointer rounded-lg overflow-hidden"
                     >
                       <img 
-                        src={thumb1.startsWith('http') ? thumb1 : `/${thumb1.replace(/^\//, '')}`} 
+                        src={resolveAssetUrl(thumb1)}
                         alt={altFor(0)}
                         className="h-full w-full object-cover"
                       />
@@ -331,7 +342,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
                       className="relative h-1/2 cursor-pointer rounded-lg overflow-hidden"
                     >
                       <img 
-                        src={thumb2.startsWith('http') ? thumb2 : `/${thumb2.replace(/^\//, '')}`} 
+                        src={resolveAssetUrl(thumb2)}
                         alt={altFor(galleryList[1] ? 1 : 0)}
                         className="h-full w-full object-cover"
                       />
@@ -1014,7 +1025,7 @@ export function HotelDetailsContent({ initialId }: { initialId?: string } = {}) 
             </button>
 
             <img 
-              src={galleryList[photoIndex].startsWith('http') ? galleryList[photoIndex] : `/${galleryList[photoIndex].replace(/^\//, '')}`} 
+              src={resolveAssetUrl(galleryList[photoIndex])}
               alt={altFor(photoIndex)} 
               className="img-fluid rounded shadow-lg object-contain" 
               style={{ maxHeight: '70vh', maxWidth: '90vw' }}

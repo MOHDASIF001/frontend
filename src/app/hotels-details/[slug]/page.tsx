@@ -1,29 +1,20 @@
 import React, { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { API_BASE_URL, resolveAssetUrl } from '../../../config';
-import { HotelDetailsContent } from '../../../components/HotelDetailsContent';
+import { HotelDetailsContent, type HotelDetails } from '../../../components/HotelDetailsContent';
 import { buildHotelSchema } from '../../../lib/schema';
 
 export const revalidate = 60;
 
-interface HotelSeo {
-  id: number;
-  name: string;
-  slug: string;
-  location: string;
-  short_description?: string;
+interface HotelSeo extends HotelDetails {
+  // Present in the API response (it's a `SELECT *`) even though only the fields
+  // in HotelDetails were previously typed here - used for the Hotel schema below.
   meta_title?: string;
   meta_description?: string;
-  // Present in the API response (it's a `SELECT *`) even though only the fields
-  // above were previously typed here - used for the Hotel schema below.
   address?: string;
   city?: string;
   state?: string;
   country?: string;
-  price_per_night?: string | number;
-  star_rating?: string | number;
-  featured_image?: string;
-  featured_image_alt?: string;
   contact_phone?: string;
 }
 
@@ -54,8 +45,11 @@ export async function generateMetadata({ params }: PageProps) {
   if (!hotel) {
     return { title: 'Hotel Not Found - Twin Brothers Holidays' };
   }
-  const title = hotel.meta_title || `${hotel.name}, ${hotel.location} - Book Now | Twin Brothers Holidays`;
-  const description = hotel.meta_description || hotel.short_description || `Book ${hotel.name} in ${hotel.location} with Twin Brothers Holidays. Compare rooms, amenities and prices, and get instant confirmation.`;
+  // `location` is sometimes left empty in the admin (only `city` filled in) - fall
+  // back so the title/description never end up with a literal "null" in them.
+  const placeName = hotel.location || hotel.city || '';
+  const title = hotel.meta_title || (placeName ? `${hotel.name}, ${placeName} - Book Now | Twin Brothers Holidays` : `${hotel.name} - Book Now | Twin Brothers Holidays`);
+  const description = hotel.meta_description || hotel.short_description || (placeName ? `Book ${hotel.name} in ${placeName} with Twin Brothers Holidays. Compare rooms, amenities and prices, and get instant confirmation.` : `Book ${hotel.name} with Twin Brothers Holidays. Compare rooms, amenities and prices, and get instant confirmation.`);
   return {
     title,
     description,
@@ -87,7 +81,7 @@ export default async function HotelDetailsSlugPage({ params }: PageProps) {
           </div>
         </div>
       }>
-        <HotelDetailsContent initialId={String(hotel.id)} />
+        <HotelDetailsContent initialId={String(hotel.id)} initialHotel={hotel} />
       </Suspense>
     </>
   );

@@ -129,6 +129,43 @@ export function buildFaqSchema(faqs: FaqSchemaSource[]) {
   };
 }
 
+export interface ActivitySchemaSource {
+  name: string;
+  city?: string;
+  description?: string | null;
+  price?: string | number | null;
+  offerPrice?: string | number | null;
+  duration?: string | null;
+  image?: string; // already-resolved absolute URL
+  url: string; // already-built absolute URL
+}
+
+export function buildActivitySchema(activity: ActivitySchemaSource) {
+  const price = Number(activity.offerPrice) > 0 ? Number(activity.offerPrice) : Number(activity.price) || undefined;
+  const description = (activity.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 500);
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name: activity.name,
+    description: description || undefined,
+    image: activity.image ? [absoluteImage(activity.image)] : undefined,
+    url: activity.url,
+  };
+  if (activity.city) {
+    schema.address = { '@type': 'PostalAddress', addressLocality: activity.city, addressCountry: 'IN' };
+  }
+  if (price) {
+    schema.offers = {
+      '@type': 'Offer',
+      priceCurrency: 'INR',
+      price,
+      availability: 'https://schema.org/InStock',
+      url: activity.url,
+    };
+  }
+  return schema;
+}
+
 export interface BlogSchemaSource {
   title: string;
   slug?: string;
