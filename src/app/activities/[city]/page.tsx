@@ -337,9 +337,11 @@ export default function CityActivitiesPage() {
                 `Discover ${act.name || 'this experience'} in ${cityName} — a handpicked activity offering a memorable, hassle-free way to explore the destination with Twin Brothers Holidays.`;
 
               return (
-                <div
+                <Link
                   key={act.id}
+                  href={`/activities/${rawSegment}/${slugifyActivityName(act.name)}/`}
                   className="twb-activity-card flex flex-col sm:flex-row gap-4 bg-white border border-slate-150 rounded-2xl mb-4"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <div className="relative w-full sm:w-[260px] h-[152px] sm:h-[310px] self-start rounded-xl overflow-hidden flex-shrink-0 bg-slate-100">
                     <img src={img} alt={act.featured_image_alt || act.name || 'Activity'} className="w-full h-full object-cover" />
@@ -409,17 +411,15 @@ export default function CityActivitiesPage() {
                       <span className="flex items-center gap-1 font-bold" style={{ fontSize: '12px', color: '#1fae5c' }}>
                         <i className="fa-solid fa-check-double"></i> Free Cancellation
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => router.push(`/activities/${rawSegment}/${slugifyActivityName(act.name)}/`)}
-                        className="text-white font-black uppercase tracking-wider border-none cursor-pointer"
+                      <span
+                        className="text-white font-black uppercase tracking-wider text-center"
                         style={{ background: '#ff8126', fontSize: '13px', borderRadius: '999px', padding: '12px 26px' }}
                       >
                         Book Now
-                      </button>
+                      </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

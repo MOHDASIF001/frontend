@@ -82,10 +82,6 @@ export default function CabsPage() {
     }
   };
 
-  const handleCityClick = (cityValue: string, dropValue?: string) => {
-    router.push(`/cabs/${cityValue}${dropValue ? `?drop=${dropValue}` : ''}`);
-  };
-
   interface PopularCity {
     id: number;
     name: string;
@@ -1143,9 +1139,11 @@ export default function CabsPage() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {hourlyRentalCities.map((city) => (
-              <div
+              <Link
                 key={city.id}
-                className="flex-shrink-0 snap-start w-[240px] sm:w-[260px]"
+                href={`/cabs/${city.value}${city.drop_value ? `?drop=${city.drop_value}` : ''}`}
+                className="flex-shrink-0 snap-start w-[240px] sm:w-[260px] block"
+                style={{ textDecoration: 'none' }}
               >
                 <div
                   className="relative overflow-hidden flex items-center justify-center"
@@ -1202,16 +1200,15 @@ export default function CabsPage() {
                       <span className="font-black text-slate-900" style={{ fontSize: '14px' }}>₹{city.hourly_price?.toLocaleString('en-IN')}</span>
                       <span className="text-slate-400 font-semibold" style={{ fontSize: '11px' }}>/hour</span>
                     </div>
-                    <button
-                      onClick={() => handleCityClick(city.value, city.drop_value)}
-                      className="font-bold flex items-center cursor-pointer"
-                      style={{ color: '#ff8126', fontSize: '12px', background: 'none', border: 'none', gap: '3px' }}
+                    <span
+                      className="font-bold flex items-center"
+                      style={{ color: '#ff8126', fontSize: '12px', gap: '3px' }}
                     >
                       Book <i className="fa-solid fa-arrow-right" style={{ fontSize: '10px' }}></i>
-                    </button>
+                    </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -1281,10 +1278,11 @@ export default function CabsPage() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {popularCities.map((city) => (
-              <div
+              <Link
                 key={city.id}
-                onClick={() => handleCityClick(city.value)}
+                href={`/cabs/${city.value}`}
                 className="flex flex-col items-center flex-shrink-0 snap-start cursor-pointer w-[55%] sm:w-[155px]"
+                style={{ textDecoration: 'none' }}
               >
                 <div className="w-full sm:w-[145px] aspect-square sm:h-[145px] overflow-hidden rounded-[26px] border border-slate-100/50 shadow-sm hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
                   <img
@@ -1294,11 +1292,35 @@ export default function CabsPage() {
                   />
                 </div>
                 <span className="mt-3 text-sm font-black text-slate-800 tracking-wider text-center">{city.name}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </div>
+      )}
+
+      {/* 3.55. All Cities We Serve — crawlable links to every /cabs/{city} page */}
+      {locationsList.length > 0 && (
+        <div className="max-w-[1140px] mx-auto px-4 sm:px-0 relative" style={{ marginTop: '40px' }}>
+          <h2 className="text-[22px] sm:text-2xl font-black text-slate-800 text-start mb-2">
+            All Cities We Serve
+          </h2>
+          <p className="text-sm font-normal text-slate-500 text-start leading-relaxed max-w-[900px] mb-6">
+            Book a reliable cab to or from any of these destinations across Jammu &amp; Kashmir.
+          </p>
+          <div className="flex flex-wrap gap-2.5">
+            {locationsList.map((loc) => (
+              <Link
+                key={loc.id}
+                href={`/cabs/${loc.value}`}
+                className="font-bold text-slate-700 bg-white border border-slate-200 hover:border-[#ff8126] hover:text-[#ff8126] transition-colors"
+                style={{ fontSize: '13px', borderRadius: '999px', padding: '9px 18px', textDecoration: 'none' }}
+              >
+                {loc.name}
+              </Link>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* 3.6. Benefits To Book Cab With Us Section */}

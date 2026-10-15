@@ -398,11 +398,11 @@ export default function ActivitiesPage() {
               const count = Number(dest.activity_count) || 0;
               const img = dest.image ? resolveAssetUrl(dest.image) : '/images/default-dest.jpg';
               return (
-                <button
+                <Link
                   key={dest.id}
-                  type="button"
-                  onClick={() => router.push(`/activities/activity-in-${slugifyDestination(dest.name)}/`)}
-                  className="flex-shrink-0 w-[200px] text-left border-none bg-transparent cursor-pointer p-0"
+                  href={`/activities/activity-in-${slugifyDestination(dest.name)}/`}
+                  className="flex-shrink-0 w-[200px] text-left block"
+                  style={{ textDecoration: 'none' }}
                 >
                   <div className="relative w-full h-[240px] rounded-2xl overflow-hidden">
                     <img src={img} alt={dest.image_alt || dest.name} className="w-full h-full object-cover" />
@@ -422,7 +422,7 @@ export default function ActivitiesPage() {
                       Starting At &#8377;{price.toLocaleString('en-IN')}
                     </span>
                   )}
-                </button>
+                </Link>
               );
             })}
           </div>
@@ -494,11 +494,11 @@ export default function ActivitiesPage() {
               const count = Number(dest.activity_count) || 0;
               const img = dest.image ? resolveAssetUrl(dest.image) : '/images/default-dest.jpg';
               return (
-                <button
+                <Link
                   key={dest.id}
-                  type="button"
-                  onClick={() => router.push(`/activities/activity-in-${slugifyDestination(dest.name)}/`)}
-                  className="flex-shrink-0 w-[200px] text-left border-none bg-transparent cursor-pointer p-0"
+                  href={`/activities/activity-in-${slugifyDestination(dest.name)}/`}
+                  className="flex-shrink-0 w-[200px] text-left block"
+                  style={{ textDecoration: 'none' }}
                 >
                   <div className="relative w-full h-[240px] rounded-2xl overflow-hidden">
                     <img src={img} alt={dest.image_alt || dest.name} className="w-full h-full object-cover" />
@@ -518,7 +518,7 @@ export default function ActivitiesPage() {
                       Starting At &#8377;{price.toLocaleString('en-IN')}
                     </span>
                   )}
-                </button>
+                </Link>
               );
             })}
           </div>

@@ -1303,6 +1303,50 @@ interface HotelsOfChoiceCarouselProps {
   choiceHotelsList: Hotel[];
 }
 
+/* All Hotels grid — unlike HotelsOfChoiceCarousel (admin "featured" flag only,
+   so this whole section disappears if no hotel happens to be marked featured),
+   this always links every hotel's own page so none of them end up orphaned
+   with no internal link pointing to it. */
+interface AllHotelsGridProps {
+  hotels: Hotel[];
+}
+
+function AllHotelsGrid({ hotels }: AllHotelsGridProps) {
+  if (hotels.length === 0) return null;
+  return (
+    <div className="container max-w-6xl mb-16 relative" style={{ marginTop: '30px' }}>
+      <h2 className="text-3xl font-black text-center text-[var(--color-text-primary)] mb-8">All Our Hotels</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {hotels.map((h) => {
+          const img = h.featured_image ? resolveAssetUrl(h.featured_image) : '/images/default-hotel.jpg';
+          return (
+            <Link
+              key={h.id}
+              href={`/hotels-details/${h.slug}`}
+              className="block bg-[var(--color-white)] border border-[var(--color-border)] shadow-sm hover:shadow-md transition duration-300 overflow-hidden"
+              style={{ borderRadius: '11px', textDecoration: 'none' }}
+            >
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4 / 3' }}>
+                <img src={img} alt={h.featured_image_alt || h.name} className="w-full h-full object-cover" />
+              </div>
+              <div className="p-3">
+                <h4 className="font-extrabold text-slate-850 leading-snug line-clamp-2" style={{ fontSize: '12.5px' }}>
+                  {h.name}
+                </h4>
+                {hotelSearchLocation(h) && (
+                  <p className="text-slate-400 font-semibold mt-1 truncate" style={{ fontSize: '10.5px' }}>
+                    <i className="fa-solid fa-location-dot mr-1"></i>{hotelSearchLocation(h)}
+                  </p>
+                )}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function HotelsOfChoiceCarousel({ choiceHotelsList }: HotelsOfChoiceCarouselProps) {
   if (choiceHotelsList.length === 0) return null;
   return (
@@ -1970,6 +2014,9 @@ export default function HotelPage() {
       <HotelsOfChoiceCarousel
         choiceHotelsList={choiceHotels}
       />
+
+      {/* 3.45 All Hotels — guarantees every hotel has an internal link pointing to it */}
+      <AllHotelsGrid hotels={hotels} />
 
 
       {/* 3.6 Popular Destinations Grid — real cities we actually have hotels in */}

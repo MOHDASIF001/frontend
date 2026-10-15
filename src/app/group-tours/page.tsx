@@ -2,7 +2,13 @@ import React, { Suspense } from 'react';
 import DestinationsExplorer from '../../components/DestinationsExplorer';
 import { API_BASE_URL } from '../../config';
 
-export const revalidate = 60;
+// This page's content comes from DestinationsExplorer, a client component that
+// reads useSearchParams() to decide which destination row to show. Without
+// force-dynamic, Next prerenders this route once at build time with no real
+// request URL - the Suspense fallback (null) gets baked into the static HTML
+// permanently, and the actual headings/links only ever appear after client-side
+// hydration. That left every page crawler-visible as a blank shell.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {
   return {

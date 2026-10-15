@@ -2,7 +2,10 @@ import React, { Suspense } from 'react';
 import DestinationsExplorer from '../../components/DestinationsExplorer';
 import { API_BASE_URL } from '../../config';
 
-export const revalidate = 60;
+// See the same comment in app/group-tours/page.tsx - DestinationsExplorer reads
+// useSearchParams(), so without force-dynamic this route gets frozen at build
+// time with an empty Suspense fallback and no real content for crawlers.
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {
   try {
