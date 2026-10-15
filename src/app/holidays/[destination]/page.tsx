@@ -59,6 +59,25 @@ export async function generateMetadata({ params }: { params: Promise<{ destinati
   if (!guide) {
     const meta = destinationMeta[destSlug];
     if (!meta) {
+      // Category pages (/holidays/{category}-packages, e.g. honeymoon-packages) had no
+      // metadata branch of their own, so they silently inherited the root layout's generic
+      // title/description - every one of them showed up as duplicate title/meta in SEO audits.
+      const categorySlugMatch = destination.match(/^(.+)-packages$/);
+      const category = categorySlugMatch
+        ? (await getCategories()).find((c) => slugifyCategory(c.name) === categorySlugMatch[1])
+        : undefined;
+      if (category) {
+        const url = `${siteUrl}/holidays/${destination}`;
+        const title = `${category.name} Packages | Twin Brothers Holidays`;
+        const description = `Browse handpicked ${category.name.toLowerCase()} holiday packages across every destination, with transparent pricing and no surprises - Twin Brothers Holidays.`;
+        return {
+          title,
+          description,
+          alternates: { canonical: url },
+          openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
+          twitter: { card: 'summary', title, description },
+        };
+      }
       // Individual package pages (/holidays/{package-slug}) get their own SEO from the admin panel.
       const pkg = await getPackageBySlug(destination);
       if (pkg) return buildPackageMetadata(pkg);

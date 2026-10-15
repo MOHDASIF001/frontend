@@ -542,7 +542,11 @@ export function HotelDetailsContent({ initialId, initialHotel }: { initialId?: s
                     ))}
                   </span>
                 </div>
-                <h1 className="font-extrabold text-slate-800 mb-1 leading-tight whitespace-nowrap truncate" style={{ fontSize: '20px', marginTop: '15px' }}>{hotel.name}</h1>
+                {/* Mobile duplicate of the desktop <h1> above (only one is ever visible,
+                    via the `hidden lg:block` / `block lg:hidden` wrappers) - kept as a <p>
+                    with identical classes so crawlers only see one H1 per page while the
+                    rendered appearance stays pixel-identical. */}
+                <p className="font-extrabold text-slate-800 mb-1 leading-tight whitespace-nowrap truncate" style={{ fontSize: '20px', marginTop: '15px' }}>{hotel.name}</p>
                 <p className="text-slate-400 text-[11px] font-semibold mb-0 flex items-center gap-1 flex-wrap">
                   <i className="fa-solid fa-location-dot"></i>
                   <span>{hotel.location}</span>

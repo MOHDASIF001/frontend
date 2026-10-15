@@ -56,7 +56,10 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
     };
   }
   return {
-    title: `${loc.name} Cab Booking - Book Taxi Service in ${loc.name} | Twin Brothers Holidays`,
+    // Was `${loc.name} Cab Booking - Book Taxi Service in ${loc.name} | ...` - repeating
+    // the location name twice pushed several of these past 90 characters (Google truncates
+    // around 60-65 in the search snippet).
+    title: `${loc.name} Cab Booking | Twin Brothers Holidays`,
     description: `Book a reliable cab in ${loc.name}, ${loc.subtitle}. Compare hatchbacks, sedans and SUVs, and get instant confirmation with Twin Brothers Holidays.`,
     alternates: { canonical: url },
   };

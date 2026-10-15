@@ -456,6 +456,9 @@ function HotelSearchHero({
       }}
     >
       <div className="container max-w-6xl mx-auto">
+        {/* Visually hidden - this page had no semantic H1 at all (the visible hero text
+            below is a marketing tagline, not a page-topic heading), which SEO audits flag. */}
+        <h1 className="sr-only">Hotel Booking - Find & Book Hotels Across Destinations | Twin Brothers Holidays</h1>
         {/* Responsive quick access icons row */}
         <ServiceQuickLinks active="hotels" />
 
