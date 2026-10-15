@@ -39,7 +39,20 @@ async function getBlogData(category?: string) {
   }
 }
 
-export async function generateMetadata() {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
+  const { category } = await searchParams;
+  // ?category= filter variants were sharing the hub's description word-for-word -
+  // give each category its own.
+  if (category) {
+    return {
+      title: `${category} - Travel Blog | Twin Brothers Holidays`,
+      description: `Read ${category} travel guides and tips from Twin Brothers Holidays.`,
+    };
+  }
   return {
     title: 'Travel Blog - Guides, Tips & Stories | Twin Brothers Holidays',
     description:
