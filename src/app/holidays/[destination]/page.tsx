@@ -83,7 +83,6 @@ export async function generateMetadata({ params }: { params: Promise<{ destinati
   return {
     title: guide.metaTitle,
     description: guide.metaDescription,
-    keywords: guide.keywords,
     alternates: { canonical: url },
     openGraph: {
       title: guide.metaTitle,

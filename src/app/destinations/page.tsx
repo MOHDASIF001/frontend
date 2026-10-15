@@ -15,7 +15,6 @@ export async function generateMetadata() {
     return {
       title: data.meta_title,
       description: data.meta_description,
-      keywords: data.meta_keywords,
     };
   } catch (err) {
     return {

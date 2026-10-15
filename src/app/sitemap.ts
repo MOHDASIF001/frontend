@@ -10,7 +10,10 @@ export const revalidate = 3600;
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
 
-// Mirrors the region slugs defined in src/app/holidays/[destination]/page.tsx.
+// Mirrors the region slugs defined in src/app/holidays/[destination]/page.tsx -
+// only destinations that actually have a page there (destinationMeta). Delhi,
+// Uttarakhand and Meghalaya were listed here with no matching page, so Google
+// was crawling 404s from the sitemap itself.
 const REGION_SLUGS = [
   'kashmir',
   'ladakh',
@@ -18,10 +21,7 @@ const REGION_SLUGS = [
   'himachal',
   'goa',
   'dubai',
-  'delhi',
   'rajasthan',
-  'uttarakhand',
-  'meghalaya',
 ];
 
 // Only the destinations that actually have group packages today (matches

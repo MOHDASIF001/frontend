@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Twin Brothers Holidays - Travel Kashmir",
   description: "Book Jammu & Kashmir tour packages, hotels, cabs, and adventure activities.",
-  keywords: "Kashmir, Srinagar, Gulmarg, Pahalgam, Tour Packages, Hotel Booking, Cabs",
   // Served as-is from /public - no build-time image processing (the app/icon.*
   // convention runs every favicon through `sharp`, which hung Vercel's build
   // when its native binary didn't install cleanly there).

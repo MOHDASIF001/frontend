@@ -21,6 +21,7 @@ const offerings = [
   { label: 'Bus Booking', href: '/bus' },
   { label: 'Visa Services', href: '/visa' },
   { label: 'Gift Cards', href: '/gift-cards' },
+  { label: 'Exclusive Offers', href: '/offers' },
 ];
 
 const quickLinks = [
