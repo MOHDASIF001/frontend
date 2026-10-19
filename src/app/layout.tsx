@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -43,16 +42,29 @@ export default async function RootLayout({
     <html lang="en" className="h-full">
       <head>
         {gtmId && (
-          <Script id="gtm-head" strategy="afterInteractive">
-            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`}
-          </Script>
+          // Plain inline <script>, not next/script - next/script's `afterInteractive`
+          // strategy defers injection until after client-side hydration, so the tag
+          // never appears in the server-rendered HTML at all (confirmed via curl: 0
+          // occurrences of this script in the raw page source). It still fired for real
+          // visitors once hydrated, but GTM's own "Test your website" installer check
+          // only reads the static HTML and reported "tag not detected". This is Google's
+          // own official snippet, rendered exactly as their install instructions show it.
+          <script
+            id="gtm-head"
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`,
+            }}
+          />
         )}
         {ga4Id && (
           <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} strategy="afterInteractive" />
-            <Script id="ga4-init" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4Id}');`}
-            </Script>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />
+            <script
+              id="ga4-init"
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4Id}');`,
+              }}
+            />
           </>
         )}
         <script
