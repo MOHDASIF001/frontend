@@ -37,8 +37,11 @@ export async function generateMetadata({ params }: PageProps) {
     return { title: 'Activity Not Found - Twin Brothers Holidays' };
   }
 
-  const title = `${activity.name} | ${cityName} Activities - Twin Brothers Holidays`;
+  // The admin panel's Meta Title / Meta Description were being ignored here in favour of a
+  // generated "{name} | {City} Activities - Twin Brothers Holidays" that ran 73-96 chars.
+  const title = activity.meta_title?.trim() || `${activity.name} | Twin B Holidays`;
   const description =
+    activity.meta_description?.trim() ||
     activity.description?.trim().replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 160) ||
     `Book ${activity.name} in ${cityName} with Twin Brothers Holidays. Easy booking, instant confirmation and great prices.`;
   const image = activity.featured_image ? resolveAssetUrl(activity.featured_image) : undefined;

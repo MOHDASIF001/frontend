@@ -8,6 +8,8 @@ import { resolveAssetUrl } from '../config';
 export interface Activity {
   id: number;
   name: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
   location: string;
   duration: string;
   rating?: number | null;

@@ -48,7 +48,8 @@ export async function generateMetadata({ params }: PageProps) {
   // `location` is sometimes left empty in the admin (only `city` filled in) - fall
   // back so the title/description never end up with a literal "null" in them.
   const placeName = hotel.location || hotel.city || '';
-  const title = hotel.meta_title || (placeName ? `${hotel.name}, ${placeName} - Book Now | Twin Brothers Holidays` : `${hotel.name} - Book Now | Twin Brothers Holidays`);
+  const nameHasPlace = placeName && hotel.name.toLowerCase().includes(placeName.toLowerCase());
+  const title = hotel.meta_title || (placeName && !nameHasPlace ? `${hotel.name}, ${placeName} | Twin B Holidays` : `${hotel.name} | Twin B Holidays`);
   const description = hotel.meta_description || hotel.short_description || (placeName ? `Book ${hotel.name} in ${placeName} with Twin Brothers Holidays. Compare rooms, amenities and prices, and get instant confirmation.` : `Book ${hotel.name} with Twin Brothers Holidays. Compare rooms, amenities and prices, and get instant confirmation.`);
   return {
     title,

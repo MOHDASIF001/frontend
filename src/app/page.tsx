@@ -97,7 +97,7 @@ export default async function HomePage() {
       {/* Real (crawlable) page heading — the large "Explore World" graphic below is a
           decorative section heading, not a page title, so it can't serve as the H1. */}
       <h1 className="sr-only">
-        Kashmir &amp; India Holiday Packages, Hotels, Cabs and Activities | Twin Brothers Holidays
+        Kashmir &amp; India Holiday Packages, Hotels, Cabs and Activities
       </h1>
 
       {/* Quick Access Dashboard */}

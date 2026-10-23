@@ -45,7 +45,7 @@ export interface DestinationGuide {
 const rajasthan: DestinationGuide = {
   slug: 'rajasthan',
   name: 'Rajasthan',
-  metaTitle: 'Rajasthan Tour Packages: Jaipur, Udaipur, Jaisalmer | Twin Brothers',
+  metaTitle: 'Rajasthan Tour Packages | Twin B Holidays',
   metaDescription:
     'Plan a Rajasthan holiday with Twin Brothers Holidays. Explore Jaipur, Udaipur, Jodhpur and Jaisalmer, the best time to visit, top places and customised Rajasthan tour packages.',
   keywords: [
