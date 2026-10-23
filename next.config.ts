@@ -56,6 +56,18 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // Activity URLs are derived from the activity name, so renaming one in the
+  // admin panel changed its URL and left the old (already indexed) one 404ing.
+  async redirects() {
+    return [
+      ["/activities/kashmir/doodh-ganga-river-nature-walk-a-peaceful-day-in-doodhpathri-kashmir", "/activities/kashmir/doodhpathri-nature-walk-kashmir"],
+      ["/activities/kashmir/srinagar-mughal-gardens-heritage-walk-nishat-bagh-shalimar-bagh-and-chashme-shahi", "/activities/kashmir/srinagar-mughal-gardens-nishat-shalimar-bagh"],
+      ["/activities/kashmir/thajiwas-glacier-pony-trek-in-sonamarg-scenic-pony-ride-and-glacier-walk", "/activities/kashmir/thajiwas-glacier-pony-trek-sonamarg"],
+      ["/activities/kerala/munnar-tea-garden-trail-and-factory-visit-a-guided-tea-estate-walk-in-kerala", "/activities/kerala/munnar-tea-garden-trail-factory-visit"],
+      ["/activities/manali/solang-valley-adventure-sports-manali-paragliding-zorbing-ropeway-and-snow-fun", "/activities/manali/solang-valley-paragliding-snow-fun-manali"],
+    ].map(([source, destination]) => ({ source, destination, statusCode: 301 as const }));
+  },
+
   // In production the frontend and the PHP API/uploads live on the same
   // domain, so admin-uploaded image paths like "/uploads/..." resolve
   // automatically. Locally they're on different origins (this dev server vs
