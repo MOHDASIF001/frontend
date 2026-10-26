@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useModals } from '../context/ModalContext';
 import { resolveAssetUrl } from '../config';
@@ -73,6 +73,9 @@ export default function ActivityDetailContent({ activity, cityName, rawCitySegme
   const { openModal } = useModals();
 
   const [activeTab, setActiveTab] = useState<TabKey>('Package Options');
+  const sectionRefs = useRef<Partial<Record<TabKey, HTMLDivElement | null>>>({});
+  // Keeps a section's heading clear of the fixed navbar when scrolled to.
+  const sectionScrollOffset = '100px';
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [travellers, setTravellers] = useState(1);
@@ -383,7 +386,10 @@ export default function ActivityDetailContent({ activity, cityName, rawCitySegme
                 <button
                   key={tab}
                   type="button"
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    sectionRefs.current[tab]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
                   className="font-bold border-none bg-transparent cursor-pointer whitespace-nowrap"
                   style={{
                     fontSize: '14px',
@@ -397,10 +403,9 @@ export default function ActivityDetailContent({ activity, cityName, rawCitySegme
               ))}
             </div>
 
-            {/* Tab content */}
+            {/* All tab sections render stacked; the tabs above scroll to them */}
             <div className="bg-white border border-slate-150 rounded-xl p-2">
-              {activeTab === 'Package Options' && (
-                <>
+              <div ref={(el) => { sectionRefs.current['Package Options'] = el; }} style={{ scrollMarginTop: sectionScrollOffset }}>
                   <h3 className="font-black text-slate-900 mb-4" style={{ fontSize: '17px' }}>Select Package Options</h3>
                   <div className="rounded-xl border-1 relative px-[11px] py-4 sm:px-4" style={{ borderColor: 'rgb(255, 129, 38)' }}>
                     <span
@@ -428,14 +433,15 @@ export default function ActivityDetailContent({ activity, cityName, rawCitySegme
                       </span>
                     </div>
                   </div>
-                </>
-              )}
+              </div>
 
-              {activeTab === 'Overview' && (
+              <div ref={(el) => { sectionRefs.current['Overview'] = el; }} className="border-t border-slate-100 mt-6 pt-5" style={{ scrollMarginTop: sectionScrollOffset }}>
+                <h3 className="font-black text-slate-900 mb-3" style={{ fontSize: '17px' }}>Overview</h3>
                 <p className="text-slate-600" style={{ fontSize: '14px', lineHeight: '1.8' }}>{description}</p>
-              )}
+              </div>
 
-              {activeTab === 'Inclusion' && (
+              <div ref={(el) => { sectionRefs.current['Inclusion'] = el; }} className="border-t border-slate-100 mt-6 pt-5" style={{ scrollMarginTop: sectionScrollOffset }}>
+                <h3 className="font-black text-slate-900 mb-3" style={{ fontSize: '17px' }}>Inclusion</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="rounded-xl px-[11px] py-4 sm:px-4" style={{ background: '#eafaf0', borderLeft: '4px solid #1fae5c' }}>
                     <h4 className="font-black text-slate-900 mb-3" style={{ fontSize: '15px' }}>Inclusions</h4>
@@ -460,20 +466,22 @@ export default function ActivityDetailContent({ activity, cityName, rawCitySegme
                     </ul>
                   </div>
                 </div>
-              )}
+              </div>
 
-              {activeTab === 'Address & Map' && (
+              <div ref={(el) => { sectionRefs.current['Address & Map'] = el; }} className="border-t border-slate-100 mt-6 pt-5" style={{ scrollMarginTop: sectionScrollOffset }}>
+                <h3 className="font-black text-slate-900 mb-3" style={{ fontSize: '17px' }}>Address &amp; Map</h3>
                 <p className="flex items-center gap-2 text-slate-700 font-semibold" style={{ fontSize: '14px' }}>
                   <i className="fa-solid fa-location-dot" style={{ color: '#ff8126' }}></i>
                   {cityName}, India
                 </p>
-              )}
+              </div>
 
-              {activeTab === 'Reviews' && (
+              <div ref={(el) => { sectionRefs.current['Reviews'] = el; }} className="border-t border-slate-100 mt-6 pt-5 pb-2" style={{ scrollMarginTop: sectionScrollOffset }}>
+                <h3 className="font-black text-slate-900 mb-3" style={{ fontSize: '17px' }}>Reviews</h3>
                 <p className="text-slate-500 font-semibold" style={{ fontSize: '14px' }}>
                   Be the first to review this activity.
                 </p>
-              )}
+              </div>
             </div>
 
             {/* Important Information (mobile) */}
