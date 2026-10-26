@@ -65,6 +65,21 @@ const nextConfig: NextConfig = {
       ["/activities/kashmir/thajiwas-glacier-pony-trek-in-sonamarg-scenic-pony-ride-and-glacier-walk", "/activities/kashmir/thajiwas-glacier-pony-trek-sonamarg"],
       ["/activities/kerala/munnar-tea-garden-trail-and-factory-visit-a-guided-tea-estate-walk-in-kerala", "/activities/kerala/munnar-tea-garden-trail-factory-visit"],
       ["/activities/manali/solang-valley-adventure-sports-manali-paragliding-zorbing-ropeway-and-snow-fun", "/activities/manali/solang-valley-paragliding-snow-fun-manali"],
+      // Pages of the old plain-PHP site that Google still has indexed. The ?id= detail
+      // pages (hotels-details.php etc.) are handled by route handlers in src/app/*.php/ (as is cab-details.php).
+      ["/index.php", "/"],
+      ["/hotel.php", "/hotel"],
+      ["/cabs.php", "/cabs"],
+      ["/activities.php", "/activities"],
+      ["/destinations.php", "/destinations"],
+      ["/tour-packages.php", "/holidays"],
+      ["/about-us.php", "/about-us"],
+      ["/contact-us.php", "/contact-us"],
+      ["/customer-support.php", "/customer-support"],
+      ["/working-with-us.php", "/working-with-us"],
+      ["/privacy-policy.php", "/privacy-policy"],
+      ["/terms-conditions.php", "/terms-conditions"],
+      ["/thank-you.php", "/"],
     ].map(([source, destination]) => ({ source, destination, statusCode: 301 as const }));
   },
 
