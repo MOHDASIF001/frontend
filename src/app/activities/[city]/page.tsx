@@ -1,6 +1,8 @@
 import CityActivitiesClient, { type Activity } from './CityActivitiesClient';
 import { API_BASE_URL } from '../../../config';
 import { toTitleCase } from '../utils';
+import SeoContentSection from '../../../components/SeoContentSection';
+import { activityCityContent } from '../../../lib/seoContent';
 
 export const revalidate = 60;
 
@@ -41,7 +43,13 @@ async function getActivities(): Promise<Activity[] | undefined> {
   }
 }
 
-export default async function CityActivitiesPage() {
+export default async function CityActivitiesPage({ params }: { params: Promise<{ city: string }> }) {
+  const { city } = await params;
   const activities = await getActivities();
-  return <CityActivitiesClient initialActivities={activities} />;
+  return (
+    <>
+      <CityActivitiesClient initialActivities={activities} />
+      <SeoContentSection content={activityCityContent(city.replace(/^activity-in-/, ''))} />
+    </>
+  );
 }

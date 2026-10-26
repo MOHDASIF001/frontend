@@ -1,4 +1,6 @@
 import React from 'react';
+import SeoContentSection from "../../components/SeoContentSection";
+import { contactContent } from "../../lib/seoContent";
 import ContactNowButton from '../../components/ContactNowButton';
 import { API_BASE_URL } from '../../config';
 
@@ -130,6 +132,8 @@ export default function ContactUsPage() {
           ></iframe>
         </div>
       </div>
+
+      <SeoContentSection content={contactContent} eyebrow="Contact Us" />
     </div>
   );
 }

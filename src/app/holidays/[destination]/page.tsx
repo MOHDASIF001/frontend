@@ -12,6 +12,8 @@ import { Category, slugifyCategory } from '../../../lib/categories';
 import { getDestinationGuide } from '../../../lib/destinationGuides';
 import { buildPackageMetadata } from '../../../lib/packageSeo';
 import { fetchPackageFaqs } from '../../../lib/faqs';
+import SeoContentSection from '../../../components/SeoContentSection';
+import { categoryContent } from '../../../lib/seoContent';
 
 export const revalidate = 60;
 
@@ -181,16 +183,19 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
     if (category) {
       const packages = await getPackages();
       return (
-        <Suspense fallback={null}>
-          <DestinationsExplorer
-            packages={packages}
-            categoryFilter={category.name}
-            heroTitle={`${category.name} Packages`}
-            heroSubtitle={`Handpicked ${category.name.toLowerCase()} holiday packages across every destination, curated by Twin Brothers Holidays.`}
-            rowHeadingSuffix={`${category.name} Packages`}
-            singleHeadingSuffix={`${category.name} Packages`}
-          />
-        </Suspense>
+        <>
+          <Suspense fallback={null}>
+            <DestinationsExplorer
+              packages={packages}
+              categoryFilter={category.name}
+              heroTitle={`${category.name} Packages`}
+              heroSubtitle={`Handpicked ${category.name.toLowerCase()} holiday packages across every destination, curated by Twin Brothers Holidays.`}
+              rowHeadingSuffix={`${category.name} Packages`}
+              singleHeadingSuffix={`${category.name} Packages`}
+            />
+          </Suspense>
+          <SeoContentSection content={categoryContent(category.name)} />
+        </>
       );
     }
   }

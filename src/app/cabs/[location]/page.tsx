@@ -2,6 +2,8 @@ import React, { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { API_BASE_URL } from '../../../config';
 import { CabListContent } from '../../../components/CabListContent';
+import SeoContentSection from '../../../components/SeoContentSection';
+import { cabContent } from '../../../lib/seoContent';
 
 export const revalidate = 3600;
 
@@ -116,6 +118,8 @@ export default async function CabLocationPage({ params, searchParams }: PageProp
       >
         <CabListContent initialPickup={loc.value} />
       </Suspense>
+
+      {!dropLoc && <SeoContentSection content={cabContent(loc.value, loc.name)} />}
     </div>
   );
 }

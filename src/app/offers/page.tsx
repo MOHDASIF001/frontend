@@ -1,4 +1,6 @@
 import React from 'react';
+import SeoContentSection from "../../components/SeoContentSection";
+import { offersHubContent } from "../../lib/seoContent";
 import Link from 'next/link';
 import { API_BASE_URL, resolveAssetUrl } from '../../config';
 
@@ -117,6 +119,8 @@ export default async function OffersPage() {
           </div>
         )}
       </div>
+
+      <SeoContentSection content={offersHubContent} eyebrow="Exclusive Offers" />
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import React from 'react';
+import SeoContentSection from "../../components/SeoContentSection";
+import { visaContent } from "../../lib/seoContent";
 import Link from 'next/link';
 
 export async function generateMetadata() {
@@ -64,6 +66,8 @@ export default function VisaPage() {
           </div>
         </div>
       </div>
+
+      <SeoContentSection content={visaContent} eyebrow="Visa Services" />
     </div>
   );
 }

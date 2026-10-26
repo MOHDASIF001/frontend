@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import DestinationsExplorer from '../../../components/DestinationsExplorer';
 import { API_BASE_URL } from '../../../config';
 import { majorDestinations } from '../../../lib/majorDestinations';
+import SeoContentSection from '../../../components/SeoContentSection';
+import { destinationContent } from '../../../lib/seoContent';
 
 // DestinationsExplorer reads useSearchParams(); see app/destinations/page.tsx.
 export const dynamic = 'force-dynamic';
@@ -55,8 +57,11 @@ export default async function DestinationFilterPage({ params }: { params: Promis
   const packages = await getPackages();
 
   return (
-    <Suspense fallback={null}>
-      <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}-tours-packages/" initialDest={dest} />
-    </Suspense>
+    <>
+      <Suspense fallback={null}>
+        <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}-tours-packages/" initialDest={dest} />
+      </Suspense>
+      <SeoContentSection content={destinationContent(dest)} />
+    </>
   );
 }

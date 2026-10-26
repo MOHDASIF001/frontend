@@ -1,6 +1,8 @@
 import React from 'react';
 import { permanentRedirect } from 'next/navigation';
 import BlogListing, { blogCategorySlug } from './BlogListing';
+import SeoContentSection from '../../components/SeoContentSection';
+import { blogContent } from '../../lib/seoContent';
 
 export const revalidate = 60;
 
@@ -24,5 +26,10 @@ export default async function BlogPage({
   // Category filters now live at /blog/category/{slug}; old ?category= links (already
   // crawled, and flagged by SEO audits as dynamic URLs) redirect there permanently.
   if (category) permanentRedirect(`/blog/category/${blogCategorySlug(category)}`);
-  return <BlogListing />;
+  return (
+    <>
+      <BlogListing />
+      <SeoContentSection content={blogContent} eyebrow="Our Blog" />
+    </>
+  );
 }

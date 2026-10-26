@@ -1,4 +1,6 @@
 import React from 'react';
+import SeoContentSection from "../../../components/SeoContentSection";
+import { offerDetailContent } from "../../../lib/seoContent";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { API_BASE_URL, resolveAssetUrl } from '../../../config';
@@ -191,6 +193,8 @@ export default async function OfferDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      <SeoContentSection content={offerDetailContent(offer.title)} eyebrow="Offer Details" />
     </div>
   );
 }

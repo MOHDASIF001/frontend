@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid';
 import { majorDestinations } from '../../../lib/majorDestinations';
 import { API_BASE_URL } from '../../../config';
+import SeoContentSection from '../../../components/SeoContentSection';
+import { groupTourContent } from '../../../lib/seoContent';
 
 export const revalidate = 60;
 
@@ -169,6 +171,8 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
           <DestinationPackagesGrid packages={filteredPackages} destinationName={destinationName} />
         )}
       </div>
+
+      <SeoContentSection content={groupTourContent(meta.slug)} />
     </div>
   );
 }
