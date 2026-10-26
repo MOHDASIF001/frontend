@@ -31,6 +31,6 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
     borderColorHex: '#082663',
     buttonColorHex: '#082663',
     iconName: 'globe',
-    linkUrl: '/destinations?dest=dubai',
+    linkUrl: '/destinations/dubai',
   },
 ];

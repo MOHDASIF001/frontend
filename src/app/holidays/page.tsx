@@ -211,7 +211,7 @@ export default async function HolidaysPage({ searchParams }: PageProps) {
           {dealCards.map((deal) => (
             <Link
               key={deal.name}
-              href={`/destinations?dest=${deal.name.toLowerCase()}`}
+              href={`/destinations/${deal.name.toLowerCase()}`}
               className="relative rounded-2xl overflow-hidden h-[140px]"
               style={{ textDecoration: 'none' }}
             >
@@ -237,7 +237,7 @@ export default async function HolidaysPage({ searchParams }: PageProps) {
           {dealCards.map((deal) => (
             <Link
               key={deal.name}
-              href={`/destinations?dest=${deal.name.toLowerCase()}`}
+              href={`/destinations/${deal.name.toLowerCase()}`}
               className="relative rounded-2xl overflow-hidden"
               style={{ gridArea: deal.area, textDecoration: 'none' }}
             >

@@ -6,7 +6,7 @@ import Link from 'next/link';
 const cards = [
   {
     id: 'domestic',
-    href: '/destinations?dest=domestic',
+    href: '/destinations/domestic',
     src: '/images/Domerstic-cards.jpg',
     alt: 'Domestic travel destinations in India',
     label: 'Domestic',
@@ -17,7 +17,7 @@ const cards = [
   },
   {
     id: 'international',
-    href: '/destinations?dest=international',
+    href: '/destinations/international',
     src: '/images/internation-cards.jpg',
     alt: 'International travel destinations and holidays',
     label: 'International',

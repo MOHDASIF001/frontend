@@ -21,6 +21,7 @@ export default function DestinationsExplorer({
   singleHeadingSuffix,
   viewAllLinkPattern,
   showGroupInfoSections = false,
+  initialDest,
 }: {
   packages: Package[];
   /** Only include packages whose category matches this (case-insensitive). */
@@ -35,10 +36,12 @@ export default function DestinationsExplorer({
   viewAllLinkPattern?: string;
   /** Show "Why Choose Us" + "About Our Group Tours" trust-building sections at the bottom of the page. */
   showGroupInfoSections?: boolean;
+  /** Filter to preselect when the page is opened at /destinations/{dest}. */
+  initialDest?: string;
 }) {
   const searchParams = useSearchParams();
   const [navbarHeight, setNavbarHeight] = useState(80);
-  const [activeDest, setActiveDest] = useState<string>(() => searchParams.get('dest') || 'explore');
+  const [activeDest, setActiveDest] = useState<string>(() => searchParams.get('dest') || initialDest || 'explore');
   const pillRowRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -50,9 +53,9 @@ export default function DestinationsExplorer({
 
   useEffect(() => {
     const d = searchParams.get('dest');
-    setActiveDest(d || 'explore');
+    setActiveDest(d || initialDest || 'explore');
     window.scrollTo({ top: 0 });
-  }, [searchParams]);
+  }, [searchParams, initialDest]);
 
   const updatePillScrollState = () => {
     const el = pillRowRef.current;
