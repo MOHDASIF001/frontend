@@ -17,6 +17,7 @@ const offerings = [
   { label: 'Cabs', href: '/cabs' },
   { label: 'Activities', href: '/activities' },
   { label: 'Group Tours', href: '/group-tours' },
+  { label: 'Group Tours to Himachal Pradesh', href: '/group-tours/himachal' },
   { label: 'Flights', href: '/flights' },
   { label: 'Bus Booking', href: '/bus' },
   { label: 'Visa Services', href: '/visa' },

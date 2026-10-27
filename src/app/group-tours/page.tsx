@@ -44,7 +44,7 @@ export default async function GroupToursPage() {
         heroSubtitle="Travel together, save more — explore our best group holiday packages across destinations."
         rowHeadingSuffix="Group Tour Packages"
         singleHeadingSuffix="Group Tour Packages"
-        viewAllLinkPattern="/group-tours/{slug}-group-tour-packages/"
+        viewAllLinkPattern="/group-tours/{slug}"
         showGroupInfoSections
       />
     </Suspense>

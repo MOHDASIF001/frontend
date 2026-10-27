@@ -14,6 +14,7 @@ import { buildPackageMetadata } from '../../../lib/packageSeo';
 import { fetchPackageFaqs } from '../../../lib/faqs';
 import SeoContentSection from '../../../components/SeoContentSection';
 import { categoryContent } from '../../../lib/seoContent';
+import { GROUP_TOUR_SLUGS, groupTourLinkLabel, groupTourSlugForPackage } from '../../../lib/groupTourSeo';
 
 export const revalidate = 60;
 
@@ -205,9 +206,11 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
     const pkg = await getPackageBySlug(rawSegment);
     if (pkg) {
       const packageFaqs = await fetchPackageFaqs(pkg.id);
+      const groupSlug = groupTourSlugForPackage(pkg);
+      const groupTourLink = groupSlug ? { label: groupTourLinkLabel(groupSlug, 'package'), url: `/group-tours/${groupSlug}` } : undefined;
       return (
         <>
-          <PackageDetailView pkg={pkg} />
+          <PackageDetailView pkg={pkg} extraLinks={groupTourLink ? [groupTourLink] : undefined} />
           <FaqSection faqs={packageFaqs} />
         </>
       );
@@ -275,6 +278,15 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
           </div>
         ) : (
           <DestinationPackagesGrid packages={filteredPackages} destinationName={destinationName} categories={allCategories.map((c) => c.name)} />
+        )}
+        {GROUP_TOUR_SLUGS.includes(slug) && (
+          <p className="text-slate-600 font-semibold mt-6" style={{ fontSize: '14px' }}>
+            Travelling with friends or family? Explore our{' '}
+            <Link href={`/group-tours/${slug}`} className="hover:underline" style={{ color: '#094074', fontWeight: 700, textDecoration: 'none' }}>
+              {groupTourLinkLabel(slug, 'destination')}
+            </Link>
+            {' '}with fixed departures.
+          </p>
         )}
       </div>
 

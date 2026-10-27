@@ -42,7 +42,7 @@ const navSections = [
   { id: 'pkg-additional', label: 'Additional Info', shortLabel: 'Additional' },
 ];
 
-export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
+export default function PackageDetailView({ pkg, extraLinks = [] }: { pkg: PackageData; extraLinks?: { label: string; url: string }[] }) {
   const { openModal } = useModals();
   const [activeImage, setActiveImage] = useState(0);
   const [activeSection, setActiveSection] = useState(navSections[0].id);
@@ -89,9 +89,12 @@ export default function PackageDetailView({ pkg }: { pkg: PackageData }) {
     itineraryDays = [{ title: 'Itinerary', description: pkg.itinerary }];
   }
 
-  const internalLinks = (pkg.internal_links || []).filter(
+  const adminLinks = (pkg.internal_links || []).filter(
     (link): link is { label: string; url: string } => Boolean(link.label && link.url)
   );
+  // Automatic links (e.g. a group package back to its destination's group tours page),
+  // skipped if the admin has already added a link to the same page.
+  const internalLinks = [...adminLinks, ...extraLinks.filter((l) => !adminLinks.some((a) => a.url.replace(/\/$/, '') === l.url))];
 
   const handleEnquire = () => {
     openModal('tour_booking', {

@@ -1,11 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid';
 import { majorDestinations } from '../../../lib/majorDestinations';
 import { API_BASE_URL } from '../../../config';
 import SeoContentSection from '../../../components/SeoContentSection';
 import { groupTourContent } from '../../../lib/seoContent';
+import FaqSection from '../../../components/FaqSection';
+import { groupTourPageSeo } from '../../../lib/groupTourSeo';
+import { buildBreadcrumbSchema } from '../../../lib/schema';
 
 export const revalidate = 60;
 
@@ -17,8 +20,9 @@ export async function generateMetadata({ params }: PageProps) {
   const meta = majorDestinations.find((d) => d.slug === slug);
   if (!meta) return {};
   const url = `${siteUrl}/group-tours/${meta.slug}`;
-  const title = `${meta.label} Group Tour Packages | Twin Brothers Holidays`;
-  const description = `Fixed-departure ${meta.label} group tour packages with Twin Brothers Holidays - handpicked groups, all sightseeing covered and a dedicated tour manager throughout.`;
+  const seo = groupTourPageSeo[meta.slug];
+  const title = seo?.title || `${meta.label} Group Tour Packages | Twin Brothers Holidays`;
+  const description = seo?.description || `Fixed-departure ${meta.label} group tour packages with Twin Brothers Holidays - handpicked groups, all sightseeing covered and a dedicated tour manager throughout.`;
   return {
     title,
     description,
@@ -72,8 +76,11 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
   if (!meta) {
     notFound();
   }
+  // /group-tours/{slug}-group-tour-packages served the same page under a second URL.
+  if (rawSegment !== meta.slug) permanentRedirect(`/group-tours/${meta.slug}`);
 
   const destinationName = meta.label;
+  const seo = groupTourPageSeo[meta.slug];
   const packages = await getPackages();
 
   const filteredPackages = packages.filter((pkg) => {
@@ -82,8 +89,35 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
     return meta.matchCities.some((city) => loc.includes(city));
   });
 
+  const pageName = seo?.h1 || `${destinationName} Group Tour Packages`;
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Group Tours', path: '/group-tours' },
+    { name: pageName, path: `/group-tours/${meta.slug}` },
+  ]);
+  const packageListSchema = filteredPackages.length > 0 && {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: pageName,
+    itemListElement: filteredPackages.map((pkg, i) => {
+      const price = Number(pkg.discounted_price) > 0 ? Number(pkg.discounted_price) : Number(pkg.price);
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'TouristTrip',
+          name: pkg.title,
+          url: `${siteUrl}/holidays/${pkg.slug}`,
+          ...(price > 0 && { offers: { '@type': 'Offer', price, priceCurrency: 'INR', url: `${siteUrl}/holidays/${pkg.slug}` } }),
+        },
+      };
+    }),
+  };
+
   return (
     <div className="bg-[#f8fafc] min-h-screen">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {packageListSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(packageListSchema) }} />}
       {/* Hero */}
       <div
         className="relative w-full bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]"
@@ -92,7 +126,7 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
         <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 relative flex justify-center w-full">
           <h1 className="font-black text-white text-[16px] sm:text-[36px]" style={{ lineHeight: '1.2', whiteSpace: 'nowrap' }}>
-            {destinationName} Group Tour Packages
+            {pageName}
           </h1>
         </div>
       </div>
@@ -109,10 +143,14 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
                 Travel to {destinationName} With a Group That Feels Like Family
               </h2>
               <p className="font-semibold mb-4" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.82)', lineHeight: '1.7', maxWidth: '640px' }}>
-                Our {destinationName} group tours are handpicked and fully managed — fixed departures, comfortable
-                stays, all sightseeing covered and a dedicated tour manager throughout, so you just show up and enjoy.
-                Perfect for friends, families and solo travellers looking to explore {destinationName} together at a
-                budget-friendly group price.
+                {seo?.intro || (
+                  <>
+                    Our {destinationName} group tours are handpicked and fully managed — fixed departures, comfortable
+                    stays, all sightseeing covered and a dedicated tour manager throughout, so you just show up and enjoy.
+                    Perfect for friends, families and solo travellers looking to explore {destinationName} together at a
+                    budget-friendly group price.
+                  </>
+                )}
               </p>
               <a
                 href="tel:+916005242675"
@@ -172,7 +210,22 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
         )}
       </div>
 
-      <SeoContentSection content={groupTourContent(meta.slug)} />
+      {seo ? (
+        <>
+          <SeoContentSection
+            eyebrow={pageName}
+            subsectionLevel="h2"
+            content={{
+              heading: seo.sections[0].heading,
+              paragraphs: seo.sections[0].paragraphs || [],
+              subsections: seo.sections.slice(1),
+            }}
+          />
+          <FaqSection faqs={seo.faqs} title={`${pageName}: FAQs`} />
+        </>
+      ) : (
+        <SeoContentSection content={groupTourContent(meta.slug)} />
+      )}
     </div>
   );
 }

@@ -7,9 +7,19 @@ export interface SeoContent {
 }
 
 // Written travel-guide copy shown just above the footer, styled like DestinationSeoSection.
-export default function SeoContentSection({ content, eyebrow = 'Travel Guide' }: { content?: SeoContent; eyebrow?: string }) {
+export default function SeoContentSection({
+  content,
+  eyebrow = 'Travel Guide',
+  subsectionLevel = 'h3',
+}: {
+  content?: SeoContent;
+  eyebrow?: string;
+  /** Render subsection headings as H2 when they are top-level topics of the page rather than sub-points. */
+  subsectionLevel?: 'h2' | 'h3';
+}) {
   if (!content) return null;
   const textStyle = { fontSize: '14px', lineHeight: '1.9' };
+  const SubHeading = subsectionLevel;
 
   return (
     <div className="bg-white" style={{ paddingTop: '48px', paddingBottom: '48px' }}>
@@ -28,9 +38,9 @@ export default function SeoContentSection({ content, eyebrow = 'Travel Guide' }:
 
         {content.subsections?.map((s) => (
           <div key={s.heading} style={{ marginTop: '26px' }}>
-            <h3 className="font-black text-slate-900 mb-2" style={{ fontSize: '17px' }}>
+            <SubHeading className="font-black text-slate-900 mb-2" style={{ fontSize: '17px' }}>
               {s.heading}
-            </h3>
+            </SubHeading>
             {s.paragraphs?.map((p, i) => (
               <p key={i} className="text-slate-600 font-medium" style={{ ...textStyle, marginTop: i ? '10px' : 0 }}>
                 {p}
