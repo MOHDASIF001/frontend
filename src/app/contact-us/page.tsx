@@ -1,12 +1,13 @@
 import React from 'react';
-import SeoContentSection from "../../components/SeoContentSection";
+import PageSeoContent from "../../components/PageSeoContent";
+import { applyPageSeoMeta, getPageSeo } from "../../lib/pageSeo";
 import { contactContent } from "../../lib/seoContent";
 import ContactNowButton from '../../components/ContactNowButton';
 import { API_BASE_URL } from '../../config';
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
+async function baseMetadata() {
   try {
     const res = await fetch(`${API_BASE_URL}/seo.php?page=contact-us.php`, { next: { revalidate: 60 } });
     if (!res.ok) throw new Error();
@@ -48,7 +49,8 @@ const infoCards = [
   },
 ];
 
-export default function ContactUsPage() {
+export default async function ContactUsPage() {
+  const pageSeo = await getPageSeo('/contact-us');
   return (
     <div className="bg-[#f8fafc]">
       {/* Hero */}
@@ -133,7 +135,11 @@ export default function ContactUsPage() {
         </div>
       </div>
 
-      <SeoContentSection content={contactContent} eyebrow="Contact Us" />
+      <PageSeoContent pageSeo={pageSeo} fallback={contactContent} eyebrow="Contact Us" />
     </div>
   );
+}
+
+export async function generateMetadata() {
+  return applyPageSeoMeta(await baseMetadata(), await getPageSeo('/contact-us'));
 }

@@ -1,16 +1,18 @@
 import React from 'react';
-import SeoContentSection from "../../components/SeoContentSection";
+import PageSeoContent from "../../components/PageSeoContent";
+import { applyPageSeoMeta, getPageSeo } from "../../lib/pageSeo";
 import { visaContent } from "../../lib/seoContent";
 import Link from 'next/link';
 
-export async function generateMetadata() {
+async function baseMetadata() {
   return {
     title: 'Visa Services - Coming Soon | Twin Brothers Holidays',
     description: 'Visa assistance services are coming soon to Twin Brothers Holidays.',
   };
 }
 
-export default function VisaPage() {
+export default async function VisaPage() {
+  const pageSeo = await getPageSeo('/visa');
   return (
     <div className="bg-[#f8fafc] min-h-screen">
       <div
@@ -67,7 +69,11 @@ export default function VisaPage() {
         </div>
       </div>
 
-      <SeoContentSection content={visaContent} eyebrow="Visa Services" />
+      <PageSeoContent pageSeo={pageSeo} fallback={visaContent} eyebrow="Visa Services" />
     </div>
   );
+}
+
+export async function generateMetadata() {
+  return applyPageSeoMeta(await baseMetadata(), await getPageSeo('/visa'));
 }

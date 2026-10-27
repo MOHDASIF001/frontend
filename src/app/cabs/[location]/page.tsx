@@ -2,8 +2,9 @@ import React, { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { API_BASE_URL } from '../../../config';
 import { CabListContent } from '../../../components/CabListContent';
-import SeoContentSection from '../../../components/SeoContentSection';
+import PageSeoContent from '../../../components/PageSeoContent';
 import { cabContent } from '../../../lib/seoContent';
+import { applyPageSeoMeta, getPageSeo } from '../../../lib/pageSeo';
 
 export const revalidate = 3600;
 
@@ -57,14 +58,14 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
       alternates: { canonical: url },
     };
   }
-  return {
+  return applyPageSeoMeta({
     // Was `${loc.name} Cab Booking - Book Taxi Service in ${loc.name} | ...` - repeating
     // the location name twice pushed several of these past 90 characters (Google truncates
     // around 60-65 in the search snippet).
     title: `${loc.name} Cab Booking | Twin Brothers Holidays`,
     description: `Book a reliable cab in ${loc.name}, ${loc.subtitle}. Compare hatchbacks, sedans and SUVs, and get instant confirmation with Twin Brothers Holidays.`,
     alternates: { canonical: url },
-  };
+  }, await getPageSeo(`/cabs/${location}`));
 }
 
 function CabCardSkeleton() {
@@ -94,12 +95,13 @@ export default async function CabLocationPage({ params, searchParams }: PageProp
   }
 
   const dropLoc = drop ? await getLocation(drop) : null;
+  const pageSeo = dropLoc ? null : await getPageSeo(`/cabs/${location}`);
 
   return (
     <div className="bg-[#f8fafc] min-h-screen pb-4">
       <div className="max-w-[1140px] mx-auto px-4" style={{ paddingTop: '20px' }}>
         <h1 className="font-black text-slate-900" style={{ fontSize: '22px', lineHeight: '1.3' }}>
-          {dropLoc ? `Book a Cab from ${loc.name} to ${dropLoc.name}` : `Book a Cab in ${loc.name}`}
+          {dropLoc ? `Book a Cab from ${loc.name} to ${dropLoc.name}` : pageSeo?.h1 || `Book a Cab in ${loc.name}`}
         </h1>
         <p className="text-slate-500 font-semibold" style={{ fontSize: '13px', marginTop: '4px' }}>
           {dropLoc
@@ -119,7 +121,7 @@ export default async function CabLocationPage({ params, searchParams }: PageProp
         <CabListContent initialPickup={loc.value} />
       </Suspense>
 
-      {!dropLoc && <SeoContentSection content={cabContent(loc.value, loc.name)} />}
+      {!dropLoc && <PageSeoContent pageSeo={pageSeo} fallback={cabContent(loc.value, loc.name)} />}
     </div>
   );
 }

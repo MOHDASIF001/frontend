@@ -1,5 +1,6 @@
 import React from 'react';
-import SeoContentSection from "../../../components/SeoContentSection";
+import PageSeoContent from "../../../components/PageSeoContent";
+import { applyPageSeoMeta, getPageSeo } from "../../../lib/pageSeo";
 import { offerDetailContent } from "../../../lib/seoContent";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -46,7 +47,7 @@ interface PageProps {
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
 
-export async function generateMetadata({ params }: PageProps) {
+async function baseMetadata({ params }: PageProps) {
   const { slug } = await params;
   const offer = await getOffer(slug);
   if (!offer) {
@@ -84,6 +85,7 @@ const servicePageHrefs: Record<string, string> = {
 };
 
 export default async function OfferDetailPage({ params }: PageProps) {
+  const pageSeo = await getPageSeo(`/offers/${(await params).slug}`);
   const { slug } = await params;
   const offer = await getOffer(slug);
 
@@ -194,7 +196,12 @@ export default async function OfferDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <SeoContentSection content={offerDetailContent(offer.title)} eyebrow="Offer Details" />
+      <PageSeoContent pageSeo={pageSeo} fallback={offerDetailContent(offer.title)} eyebrow="Offer Details" />
     </div>
   );
+}
+
+export async function generateMetadata(props: PageProps) {
+  const { slug } = await props.params;
+  return applyPageSeoMeta(await baseMetadata(props), await getPageSeo(`/offers/${slug}`));
 }

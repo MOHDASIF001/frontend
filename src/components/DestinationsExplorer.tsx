@@ -22,6 +22,7 @@ export default function DestinationsExplorer({
   viewAllLinkPattern,
   showGroupInfoSections = false,
   initialDest,
+  titleOverride,
 }: {
   packages: Package[];
   /** Only include packages whose category matches this (case-insensitive). */
@@ -38,6 +39,8 @@ export default function DestinationsExplorer({
   showGroupInfoSections?: boolean;
   /** Filter to preselect when the page is opened at /destinations/{dest}. */
   initialDest?: string;
+  /** Admin-set H1 (Page SEO Content); wins over every built-in heading. */
+  titleOverride?: string;
 }) {
   const searchParams = useSearchParams();
   const [navbarHeight, setNavbarHeight] = useState(80);
@@ -124,7 +127,7 @@ export default function DestinationsExplorer({
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
         <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
           <h1 className="font-black text-white mb-3 text-[24px] sm:text-[38px]" style={{ lineHeight: '1.2' }}>
-            {activeDest === 'domestic' ? 'Domestic Destinations' : activeDest === 'international' ? 'International Destinations' : heroTitle}
+            {titleOverride && activeDest === (initialDest || 'explore') ? titleOverride : (activeDest === 'domestic' ? 'Domestic Destinations' : activeDest === 'international' ? 'International Destinations' : heroTitle)}
           </h1>
           <p className="font-semibold max-w-[560px] mx-auto text-[13px] sm:text-[15px]" style={{ color: 'rgba(255,255,255,0.75)' }}>
             {heroSubtitle}

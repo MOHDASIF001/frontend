@@ -4,9 +4,9 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid';
 import { majorDestinations } from '../../../lib/majorDestinations';
 import { API_BASE_URL } from '../../../config';
-import SeoContentSection from '../../../components/SeoContentSection';
+import PageSeoContent from '../../../components/PageSeoContent';
+import { applyPageSeoMeta, getPageSeo } from '../../../lib/pageSeo';
 import { groupTourContent } from '../../../lib/seoContent';
-import FaqSection from '../../../components/FaqSection';
 import { groupTourPageSeo } from '../../../lib/groupTourSeo';
 import { buildBreadcrumbSchema } from '../../../lib/schema';
 
@@ -23,13 +23,13 @@ export async function generateMetadata({ params }: PageProps) {
   const seo = groupTourPageSeo[meta.slug];
   const title = seo?.title || `${meta.label} Group Tour Packages | Twin Brothers Holidays`;
   const description = seo?.description || `Fixed-departure ${meta.label} group tour packages with Twin Brothers Holidays - handpicked groups, all sightseeing covered and a dedicated tour manager throughout.`;
-  return {
+  return applyPageSeoMeta({
     title,
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
     twitter: { card: 'summary', title, description },
-  };
+  }, await getPageSeo(`/group-tours/${meta.slug}`));
 }
 
 interface Package {
@@ -81,7 +81,7 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
 
   const destinationName = meta.label;
   const seo = groupTourPageSeo[meta.slug];
-  const packages = await getPackages();
+  const [packages, pageSeo] = await Promise.all([getPackages(), getPageSeo(`/group-tours/${meta.slug}`)]);
 
   const filteredPackages = packages.filter((pkg) => {
     if ((pkg.category || '').toLowerCase() !== 'group') return false;
@@ -89,7 +89,7 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
     return meta.matchCities.some((city) => loc.includes(city));
   });
 
-  const pageName = seo?.h1 || `${destinationName} Group Tour Packages`;
+  const pageName = pageSeo?.h1 || seo?.h1 || `${destinationName} Group Tour Packages`;
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', path: '/' },
     { name: 'Group Tours', path: '/group-tours' },
@@ -143,7 +143,7 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
                 Travel to {destinationName} With a Group That Feels Like Family
               </h2>
               <p className="font-semibold mb-4" style={{ fontSize: '13px', color: 'rgba(255,255,255,0.82)', lineHeight: '1.7', maxWidth: '640px' }}>
-                {seo?.intro || (
+                {pageSeo?.intro || seo?.intro || (
                   <>
                     Our {destinationName} group tours are handpicked and fully managed — fixed departures, comfortable
                     stays, all sightseeing covered and a dedicated tour manager throughout, so you just show up and enjoy.
@@ -210,22 +210,18 @@ export default async function GroupTourDestinationPage({ params }: PageProps) {
         )}
       </div>
 
-      {seo ? (
-        <>
-          <SeoContentSection
-            eyebrow={pageName}
-            subsectionLevel="h2"
-            content={{
-              heading: seo.sections[0].heading,
-              paragraphs: seo.sections[0].paragraphs || [],
-              subsections: seo.sections.slice(1),
-            }}
-          />
-          <FaqSection faqs={seo.faqs} title={`${pageName}: FAQs`} />
-        </>
-      ) : (
-        <SeoContentSection content={groupTourContent(meta.slug)} />
-      )}
+      <PageSeoContent
+        pageSeo={pageSeo}
+        eyebrow={seo ? pageName : undefined}
+        subsectionLevel={seo ? 'h2' : undefined}
+        fallback={
+          seo
+            ? { heading: seo.sections[0].heading, paragraphs: seo.sections[0].paragraphs || [], subsections: seo.sections.slice(1) }
+            : groupTourContent(meta.slug)
+        }
+        fallbackFaqs={seo?.faqs}
+        faqTitle={`${pageName}: FAQs`}
+      />
     </div>
   );
 }

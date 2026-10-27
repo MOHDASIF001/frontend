@@ -1,8 +1,9 @@
 import CityActivitiesClient, { type Activity } from './CityActivitiesClient';
 import { API_BASE_URL } from '../../../config';
 import { toTitleCase } from '../utils';
-import SeoContentSection from '../../../components/SeoContentSection';
+import PageSeoContent from '../../../components/PageSeoContent';
 import { activityCityContent } from '../../../lib/seoContent';
+import { applyPageSeoMeta, getPageSeo } from '../../../lib/pageSeo';
 
 export const revalidate = 60;
 
@@ -18,13 +19,13 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   const url = `${siteUrl}/activities/${city}`;
   const title = `${cityName} Activities & Things To Do | Twin Brothers Holidays`;
   const description = `Explore top-rated ${cityName} activities and experiences - book adventure tours, sightseeing and local experiences with Twin Brothers Holidays.`;
-  return {
+  return applyPageSeoMeta({
     title,
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
     twitter: { card: 'summary', title, description },
-  };
+  }, await getPageSeo(`/activities/${citySlug}`));
 }
 
 // Fetches the full activities list on the server so this page's results (and
@@ -45,11 +46,12 @@ async function getActivities(): Promise<Activity[] | undefined> {
 
 export default async function CityActivitiesPage({ params }: { params: Promise<{ city: string }> }) {
   const { city } = await params;
-  const activities = await getActivities();
+  const citySlug = city.replace(/^activity-in-/, '');
+  const [activities, pageSeo] = await Promise.all([getActivities(), getPageSeo(`/activities/${citySlug}`)]);
   return (
     <>
       <CityActivitiesClient initialActivities={activities} />
-      <SeoContentSection content={activityCityContent(city.replace(/^activity-in-/, ''))} />
+      <PageSeoContent pageSeo={pageSeo} fallback={activityCityContent(citySlug)} />
     </>
   );
 }

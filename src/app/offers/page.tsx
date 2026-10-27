@@ -1,12 +1,13 @@
 import React from 'react';
-import SeoContentSection from "../../components/SeoContentSection";
+import PageSeoContent from "../../components/PageSeoContent";
+import { applyPageSeoMeta, getPageSeo } from "../../lib/pageSeo";
 import { offersHubContent } from "../../lib/seoContent";
 import Link from 'next/link';
 import { API_BASE_URL, resolveAssetUrl } from '../../config';
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
+async function baseMetadata() {
   return {
     title: 'Exclusive Offers - Twin Brothers Holidays',
     description: 'Browse all current deals and discounts on holiday packages, hotels, cabs and bus bookings with Twin Brothers Holidays.',
@@ -41,6 +42,7 @@ async function getOffers(): Promise<OfferCard[]> {
 }
 
 export default async function OffersPage() {
+  const pageSeo = await getPageSeo('/offers');
   const offers = await getOffers();
 
   return (
@@ -120,7 +122,11 @@ export default async function OffersPage() {
         )}
       </div>
 
-      <SeoContentSection content={offersHubContent} eyebrow="Exclusive Offers" />
+      <PageSeoContent pageSeo={pageSeo} fallback={offersHubContent} eyebrow="Exclusive Offers" />
     </div>
   );
+}
+
+export async function generateMetadata() {
+  return applyPageSeoMeta(await baseMetadata(), await getPageSeo('/offers'));
 }

@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import DestinationsExplorer from '../../../components/DestinationsExplorer';
 import { API_BASE_URL } from '../../../config';
 import { majorDestinations } from '../../../lib/majorDestinations';
-import SeoContentSection from '../../../components/SeoContentSection';
+import PageSeoContent from '../../../components/PageSeoContent';
+import { applyPageSeoMeta, getPageSeo } from '../../../lib/pageSeo';
 import { destinationContent } from '../../../lib/seoContent';
 
 // DestinationsExplorer reads useSearchParams(); see app/destinations/page.tsx.
@@ -26,13 +27,13 @@ export async function generateMetadata({ params }: { params: Promise<{ dest: str
   const title = `${label} Destinations | Twin Brothers Holidays`;
   const description = `Explore ${isCategory ? label.toLowerCase() : label} travel destinations and holiday packages with Twin Brothers Holidays - handpicked itineraries, transparent pricing and no surprises.`;
   const url = `${siteUrl}/destinations/${dest}`;
-  return {
+  return applyPageSeoMeta({
     title,
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
     twitter: { card: 'summary', title, description },
-  };
+  }, await getPageSeo(`/destinations/${dest}`));
 }
 
 async function getPackages() {
@@ -54,14 +55,14 @@ export default async function DestinationFilterPage({ params }: { params: Promis
   const { dest } = await params;
   if (!resolveLabel(dest)) notFound();
 
-  const packages = await getPackages();
+  const [packages, pageSeo] = await Promise.all([getPackages(), getPageSeo(`/destinations/${dest}`)]);
 
   return (
     <>
       <Suspense fallback={null}>
-        <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}-tours-packages/" initialDest={dest} />
+        <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}-tours-packages/" initialDest={dest} titleOverride={pageSeo?.h1 || undefined} />
       </Suspense>
-      <SeoContentSection content={destinationContent(dest)} />
+      <PageSeoContent pageSeo={pageSeo} fallback={destinationContent(dest)} />
     </>
   );
 }

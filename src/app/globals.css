@@ -358,3 +358,19 @@ body {
   border: 1px solid #e2e8f0;
   padding: 8px 12px;
 }
+
+/* Admin-written page content (Admin Panel -> Page SEO Content), styled to match
+   SeoContentSection so switching a page to admin content looks the same. */
+.seo-rich p { font-size: 14px; line-height: 1.9; color: #475569; font-weight: 500; margin: 14px 0 0; }
+.seo-rich > :first-child { margin-top: 0; }
+.seo-rich h2, .seo-rich h3, .seo-rich h4 { font-size: 17px; font-weight: 500; color: #0f172a; margin: 26px 0 8px; }
+.seo-rich h2 + p, .seo-rich h3 + p, .seo-rich h4 + p, .seo-rich h2 + ul, .seo-rich h3 + ul { margin-top: 0; }
+.seo-rich ul, .seo-rich ol { list-style: none; padding: 0; margin: 10px 0 0; }
+.seo-rich li { position: relative; padding-left: 20px; font-size: 14px; line-height: 1.9; color: #475569; font-weight: 500; margin-top: 8px; }
+.seo-rich li:first-child { margin-top: 0; }
+.seo-rich ul li::before { content: "\f058"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: #ff8126; font-size: 12px; line-height: 1; position: absolute; left: 0; top: 8px; }
+.seo-rich ol { counter-reset: seo-ol; }
+.seo-rich ol li::before { counter-increment: seo-ol; content: counter(seo-ol) "."; color: #ff8126; font-weight: 800; position: absolute; left: 0; }
+.seo-rich a { color: #094074; font-weight: 700; text-decoration: none; }
+.seo-rich a:hover { text-decoration: underline; }
+.seo-rich strong { color: #0f172a; }

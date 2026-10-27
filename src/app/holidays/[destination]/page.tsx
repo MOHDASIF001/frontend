@@ -12,7 +12,8 @@ import { Category, slugifyCategory } from '../../../lib/categories';
 import { getDestinationGuide } from '../../../lib/destinationGuides';
 import { buildPackageMetadata } from '../../../lib/packageSeo';
 import { fetchPackageFaqs } from '../../../lib/faqs';
-import SeoContentSection from '../../../components/SeoContentSection';
+import PageSeoContent from '../../../components/PageSeoContent';
+import { applyPageSeoMeta, getPageSeo } from '../../../lib/pageSeo';
 import { categoryContent } from '../../../lib/seoContent';
 import { GROUP_TOUR_SLUGS, groupTourLinkLabel, groupTourSlugForPackage } from '../../../lib/groupTourSeo';
 
@@ -73,13 +74,13 @@ export async function generateMetadata({ params }: { params: Promise<{ destinati
         const url = `${siteUrl}/holidays/${destination}`;
         const title = `${category.name} Packages | Twin Brothers Holidays`;
         const description = `Browse handpicked ${category.name.toLowerCase()} holiday packages across every destination, with transparent pricing and no surprises - Twin Brothers Holidays.`;
-        return {
+        return applyPageSeoMeta({
           title,
           description,
           alternates: { canonical: url },
           openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
           twitter: { card: 'summary', title, description },
-        };
+        }, await getPageSeo(`/holidays/${destination}`));
       }
       // Individual package pages (/holidays/{package-slug}) get their own SEO from the admin panel.
       const pkg = await getPackageBySlug(destination);
@@ -182,7 +183,7 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
       ? (await getCategories()).find((c) => slugifyCategory(c.name) === categorySlugMatch[1])
       : undefined;
     if (category) {
-      const packages = await getPackages();
+      const [packages, pageSeo] = await Promise.all([getPackages(), getPageSeo(`/holidays/${rawSegment}`)]);
       return (
         <>
           <Suspense fallback={null}>
@@ -190,12 +191,13 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
               packages={packages}
               categoryFilter={category.name}
               heroTitle={`${category.name} Packages`}
+              titleOverride={pageSeo?.h1 || undefined}
               heroSubtitle={`Handpicked ${category.name.toLowerCase()} holiday packages across every destination, curated by Twin Brothers Holidays.`}
               rowHeadingSuffix={`${category.name} Packages`}
               singleHeadingSuffix={`${category.name} Packages`}
             />
           </Suspense>
-          <SeoContentSection content={categoryContent(category.name)} />
+          <PageSeoContent pageSeo={pageSeo} fallback={categoryContent(category.name)} />
         </>
       );
     }
