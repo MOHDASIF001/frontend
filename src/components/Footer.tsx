@@ -115,7 +115,7 @@ export default function Footer() {
               <h6 className="font-black text-white mb-4" style={{ fontSize: '13px', letterSpacing: '0.5px' }}>POPULAR DESTINATIONS</h6>
               <div className="flex flex-col gap-3">
                 {domesticDestinations.map((d) => (
-                  <Link key={d.id} href={`/holidays/${d.slug}-tours-packages/`} style={linkStyle}>{d.name}</Link>
+                  <Link key={d.id} href={`/holidays/${d.slug}`} style={linkStyle}>{d.name}</Link>
                 ))}
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function Footer() {
               <h6 className="font-black text-white mb-4" style={{ fontSize: '13px', letterSpacing: '0.5px' }}>INTERNATIONAL DESTINATIONS</h6>
               <div className="flex flex-col gap-3">
                 {internationalDestinations.map((d) => (
-                  <Link key={d.id} href={`/holidays/${d.slug}-tours-packages/`} style={linkStyle}>{d.name}</Link>
+                  <Link key={d.id} href={`/holidays/${d.slug}`} style={linkStyle}>{d.name}</Link>
                 ))}
               </div>
             </div>

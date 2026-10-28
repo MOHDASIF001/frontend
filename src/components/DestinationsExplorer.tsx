@@ -33,7 +33,7 @@ export default function DestinationsExplorer({
   rowHeadingSuffix?: string;
   /** Appended after the destination label for the single-destination heading. Defaults to "Tours in {label}". */
   singleHeadingSuffix?: string;
-  /** Href pattern for the "View All" link, with `{slug}` as a placeholder, e.g. "/holidays/{slug}-tours-packages/". When omitted, "View All" just switches to the in-page filtered view. */
+  /** Href pattern for the "View All" link, with `{slug}` as a placeholder, e.g. "/holidays/{slug}". When omitted, "View All" just switches to the in-page filtered view. */
   viewAllLinkPattern?: string;
   /** Show "Why Choose Us" + "About Our Group Tours" trust-building sections at the bottom of the page. */
   showGroupInfoSections?: boolean;

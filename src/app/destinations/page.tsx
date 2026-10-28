@@ -55,7 +55,7 @@ export default async function DestinationsPage({ searchParams }: { searchParams:
 
   return (
     <Suspense fallback={null}>
-      <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}-tours-packages/" />
+      <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}" />
     </Suspense>
   );
 }

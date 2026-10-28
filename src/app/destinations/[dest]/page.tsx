@@ -60,7 +60,7 @@ export default async function DestinationFilterPage({ params }: { params: Promis
   return (
     <>
       <Suspense fallback={null}>
-        <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}-tours-packages/" initialDest={dest} titleOverride={pageSeo?.h1 || undefined} />
+        <DestinationsExplorer packages={packages} viewAllLinkPattern="/holidays/{slug}" initialDest={dest} titleOverride={pageSeo?.h1 || undefined} />
       </Suspense>
       <PageSeoContent pageSeo={pageSeo} fallback={destinationContent(dest)} />
     </>

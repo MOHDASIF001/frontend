@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import DestinationPackagesGrid from '../../../components/DestinationPackagesGrid';
 import PackageDetailView from '../../../components/PackageDetailView';
 import DestinationsExplorer from '../../../components/DestinationsExplorer';
@@ -16,6 +16,10 @@ import PageSeoContent from '../../../components/PageSeoContent';
 import { applyPageSeoMeta, getPageSeo } from '../../../lib/pageSeo';
 import { categoryContent } from '../../../lib/seoContent';
 import { GROUP_TOUR_SLUGS, groupTourLinkLabel, groupTourSlugForPackage } from '../../../lib/groupTourSeo';
+import { holidayDestinationSeo, fillSeoTokens, type DestinationStats } from '../../../lib/holidayDestinationSeo';
+import { buildBreadcrumbSchema } from '../../../lib/schema';
+import IntroReadMore from '../../../components/IntroReadMore';
+import type { PageSeo } from '../../../lib/pageSeo';
 
 export const revalidate = 60;
 
@@ -56,6 +60,41 @@ function resolveDestinationSlug(rawSegment: string): string {
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://twinbholidays.com';
 
+function matchesDestination(pkg: Package, slug: string): boolean {
+  const loc = (pkg.location_name || '').toLowerCase();
+  const matchCities = destinationMeta[slug]?.matchCities;
+  return matchCities ? matchCities.some((city) => loc.includes(city)) : loc.includes(slug);
+}
+
+const packagePrice = (pkg: Package) => (Number(pkg.discounted_price) > 0 ? Number(pkg.discounted_price) : Number(pkg.price));
+
+function destinationStats(packages: Package[]): DestinationStats {
+  const prices = packages.map(packagePrice).filter((p) => p > 0);
+  const nights = packages.map((p) => Number(p.duration_nights)).filter((n) => n > 0);
+  return {
+    count: packages.length,
+    minPrice: prices.length ? Math.min(...prices) : 0,
+    minNights: nights.length ? Math.min(...nights) : 0,
+    maxNights: nights.length ? Math.max(...nights) : 0,
+  };
+}
+
+// Admin text (Page SEO Content) may use the same {year}/{min_price}/... placeholders.
+function fillPageSeo(pageSeo: PageSeo | null, stats: DestinationStats): PageSeo | null {
+  if (!pageSeo) return null;
+  const fill = (v?: string | null) => (v ? fillSeoTokens(v, stats) : v);
+  return {
+    ...pageSeo,
+    meta_title: fill(pageSeo.meta_title),
+    meta_description: fill(pageSeo.meta_description),
+    h1: fill(pageSeo.h1),
+    intro: fill(pageSeo.intro),
+    content_heading: fill(pageSeo.content_heading),
+    content: fill(pageSeo.content),
+    faqs: pageSeo.faqs.map((f) => ({ question: fillSeoTokens(f.question, stats), answer: fillSeoTokens(f.answer, stats) })),
+  };
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ destination: string }> }) {
   const { destination } = await params;
   const destSlug = resolveDestinationSlug(destination);
@@ -92,15 +131,20 @@ export async function generateMetadata({ params }: { params: Promise<{ destinati
     // to the homepage's generic metadata, which is what Search Console was flagging as
     // duplicate content with no canonical chosen.
     const url = `${siteUrl}/holidays/${destSlug}`;
-    const title = `${meta.label} Holiday Packages | Twin Brothers Holidays`;
-    const description = `Explore ${meta.label} holiday packages with Twin Brothers Holidays - handpicked stays, local transport and sightseeing in one itinerary, with transparent pricing and no surprises.`;
-    return {
+    const seo = holidayDestinationSeo[destSlug];
+    const [packages, pageSeo] = await Promise.all([getPackages(), getPageSeo(`/holidays/${destSlug}`)]);
+    const stats = destinationStats(packages.filter((pkg) => matchesDestination(pkg, destSlug)));
+    const title = seo ? fillSeoTokens(seo.title, stats) : `${meta.label} Holiday Packages | Twin Brothers Holidays`;
+    const description = seo
+      ? fillSeoTokens(seo.description, stats)
+      : `Explore ${meta.label} holiday packages with Twin Brothers Holidays - handpicked stays, local transport and sightseeing in one itinerary, with transparent pricing and no surprises.`;
+    return applyPageSeoMeta({
       title,
       description,
       alternates: { canonical: url },
       openGraph: { title, description, url, siteName: 'Twin Brothers Holidays', type: 'website' },
       twitter: { card: 'summary', title, description },
-    };
+    }, fillPageSeo(pageSeo, stats));
   }
   const url = `${siteUrl}/holidays/${guide.slug}`;
   return {
@@ -223,21 +267,52 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
     notFound();
   }
 
+  // /holidays/{slug}-tours-packages/ and the leh/manali aliases served this same page
+  // under extra URLs, splitting ranking signals - send them to the one canonical URL.
+  if (rawSegment !== slug) permanentRedirect(`/holidays/${slug}`);
+
   const destinationName = meta.label;
   const guide = getDestinationGuide(slug);
+  const seo = holidayDestinationSeo[slug];
 
-  const [packages, allCategories] = await Promise.all([getPackages(), getCategories()]);
+  const [packages, allCategories, rawPageSeo] = await Promise.all([getPackages(), getCategories(), getPageSeo(`/holidays/${slug}`)]);
 
-  const filteredPackages = packages.filter((pkg) => {
-    const loc = (pkg.location_name || '').toLowerCase();
-    if (meta?.matchCities) {
-      return meta.matchCities.some((city) => loc.includes(city));
-    }
-    return loc.includes(slug);
-  });
+  const filteredPackages = packages.filter((pkg) => matchesDestination(pkg, slug));
+  const stats = destinationStats(filteredPackages);
+  const pageSeo = fillPageSeo(rawPageSeo, stats);
+  const pageName = pageSeo?.h1 || (seo ? fillSeoTokens(seo.h1, stats) : `${destinationName} Tour Packages`);
+  const intro = pageSeo?.intro || (seo ? fillSeoTokens(seo.intro, stats) : '');
+
+  // DestinationGuide already emits its own BreadcrumbList.
+  const breadcrumbSchema = !guide && buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Holidays', path: '/holidays' },
+    { name: `${destinationName} Tour Packages`, path: `/holidays/${slug}` },
+  ]);
+  const packageListSchema = filteredPackages.length > 0 && {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: pageName,
+    numberOfItems: filteredPackages.length,
+    itemListElement: filteredPackages.map((pkg, i) => {
+      const price = packagePrice(pkg);
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'TouristTrip',
+          name: pkg.title,
+          url: `${siteUrl}/holidays/${pkg.slug}`,
+          ...(price > 0 && { offers: { '@type': 'Offer', price, priceCurrency: 'INR', url: `${siteUrl}/holidays/${pkg.slug}` } }),
+        },
+      };
+    }),
+  };
 
   return (
     <div className="bg-[#f8fafc] min-h-screen">
+      {breadcrumbSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />}
+      {packageListSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(packageListSchema) }} />}
       {/* Hero */}
       <div
         className="relative w-full bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460]"
@@ -246,12 +321,26 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
         <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
           <h1 className="font-black text-white text-[22px] sm:text-[36px]" style={{ lineHeight: '1.2' }}>
-            {destinationName} Tour Packages
+            {pageName}
           </h1>
         </div>
       </div>
 
-      <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '36px', paddingBottom: '60px' }}>
+      <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '20px', paddingBottom: '60px' }}>
+        <p className="text-sm font-semibold text-slate-500 mb-3">
+          <Link href="/" className="hover:underline" style={{ textDecoration: 'none', color: '#64748b' }}>Home</Link>
+          <span className="mx-1.5">&gt;</span>
+          <Link href="/holidays" className="hover:underline" style={{ textDecoration: 'none', color: '#64748b' }}>Holidays</Link>
+          <span className="mx-1.5">&gt;</span>
+          <span className="font-bold" style={{ color: '#094074' }}>{destinationName}</span>
+        </p>
+        {intro && <IntroReadMore text={intro} />}
+        {filteredPackages.length > 0 && (
+          <p className="text-slate-700 font-bold" style={{ fontSize: '14px', margin: '16px 0 0' }}>
+            {filteredPackages.length} {destinationName} tour package{filteredPackages.length === 1 ? '' : 's'} found
+          </p>
+        )}
+        <div style={{ marginTop: '16px' }}>
         {filteredPackages.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-150">
             {guide ? (
@@ -281,6 +370,7 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
         ) : (
           <DestinationPackagesGrid packages={filteredPackages} destinationName={destinationName} categories={allCategories.map((c) => c.name)} />
         )}
+        </div>
         {GROUP_TOUR_SLUGS.includes(slug) && (
           <p className="text-slate-600 font-semibold mt-6" style={{ fontSize: '14px' }}>
             Travelling with friends or family? Explore our{' '}
@@ -293,6 +383,18 @@ export default async function DestinationPackagesPage({ params }: PageProps) {
       </div>
 
       {guide && <DestinationGuide guide={guide} />}
+
+      <PageSeoContent
+        pageSeo={pageSeo}
+        eyebrow={seo ? `${destinationName} Travel Guide` : undefined}
+        fallback={seo && {
+          heading: fillSeoTokens(seo.content.heading, stats),
+          paragraphs: seo.content.paragraphs.map((p) => fillSeoTokens(p, stats)),
+          subsections: seo.content.subsections,
+        }}
+        fallbackFaqs={seo?.faqs.map((f) => ({ question: fillSeoTokens(f.question, stats), answer: fillSeoTokens(f.answer, stats) }))}
+        faqTitle={`${destinationName} Tour Packages: FAQs`}
+      />
 
       {/* SEO content + Why Choose Us (shown just above the footer) */}
       <DestinationSeoSection destinationName={destinationName} />

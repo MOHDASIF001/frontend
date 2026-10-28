@@ -30,7 +30,7 @@ export default function HolidaysSearchBar() {
 
   const goToDestination = (name: string) => {
     const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-+|-+$)/g, '');
-    router.push(`/holidays/${slug}-tours-packages/`);
+    router.push(`/holidays/${slug}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
